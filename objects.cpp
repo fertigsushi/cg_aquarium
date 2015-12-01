@@ -15,8 +15,7 @@
 
 GLuint VertexArrayIDWireCube = 0;
 
-static void createWireCube()
-{
+static void createWireCube() {
 	// Vertexarrays kapseln ab OpenGL3 Eckpunkte, Texturen und Normalen
 	glGenVertexArrays(1, &VertexArrayIDWireCube);
 	glBindVertexArray(VertexArrayIDWireCube);
@@ -58,8 +57,7 @@ static void createWireCube()
 	glBindVertexArray(0);
 }
 
-void drawWireCube()
-{
+void drawWireCube() {
 	if (!VertexArrayIDWireCube)
 	{
 		createWireCube();
@@ -75,8 +73,7 @@ void drawWireCube()
 
 GLuint VertexArrayIDSolidCube = 0;
 
-static void createCube()
-{
+static void createCube() {
 	GLuint vertexbuffer;
 	GLuint colorbuffer;
 	
@@ -150,10 +147,8 @@ static void createCube()
 	glBindVertexArray(0);
 }
 
-void drawCube()
-{
-	if (!VertexArrayIDSolidCube)
-	{
+void drawCube() {
+	if (!VertexArrayIDSolidCube) {
 		createCube();
 	}
 
@@ -173,8 +168,7 @@ GLuint longs;
 
 
 // Dieser Code  basiert auf http://ozark.hendrix.edu/~burch/cs/490/sched/feb8/
-static void createSphere()
-{
+static void createSphere() {
 	glGenVertexArrays(1, &VertexArrayIDSphere);
 	glBindVertexArray(VertexArrayIDSphere);
 
@@ -255,10 +249,8 @@ static void createSphere()
 }
 
 // Nur die Angabe bei der ersten Kugel ist relevant
-void drawSphere(GLuint slats, GLuint slongs)
-{
-	if (!VertexArrayIDSphere)
-	{
+void drawSphere(GLuint slats, GLuint slongs) {
+	if (!VertexArrayIDSphere) {
 		lats = slats;
 		longs = slongs;
 		createSphere();
