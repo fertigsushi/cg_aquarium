@@ -1,0 +1,72 @@
+﻿Der Buildvorgang wurde am 20.04.2015 14:55:58 gestartet.
+     1>Projekt "Z:\CGTutorial\CGTutorial.vcxproj" auf Knoten "2", build Ziel(e).
+     1>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.Targets(1422,5): warning : The referenced project 'C:/Users/tj/Documents/OpenGL-tutorial_Binaries/external/GLEW_190.vcxproj' does not exist.
+     1>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.Targets(1422,5): warning : The referenced project 'C:/Users/tj/Documents/OpenGL-tutorial_Binaries/external/GLFW_276.vcxproj' does not exist.
+     1>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.Targets(1422,5): warning : The referenced project 'C:/Users/tj/Documents/OpenGL-tutorial_Binaries/ZERO_CHECK.vcxproj' does not exist.
+     1>InitializeBuildStatus:
+         "Debug\CGTutorial.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
+       ClCompile:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"external\glfw-3.0" /I"external\glm-0.9.4.0" /I"external\glew-1.9.0" /Zi /nologo /W3 /WX- /MP /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D TW_STATIC /D TW_NO_LIB_PRAGMA /D TW_NO_DIRECT3D /D GLEW_STATIC /D _CRT_SECURE_NO_WARNINGS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt CGTutorial.cpp objects.cpp objloader.cpp shader.cpp texture.cpp
+         CGTutorial.cpp
+         objects.cpp
+         objloader.cpp
+         shader.cpp
+     1>objects.cpp(189): warning C4018: '<=': Konflikt zwischen 'signed' und 'unsigned'
+     1>objects.cpp(199): warning C4018: '<=': Konflikt zwischen 'signed' und 'unsigned'
+         texture.cpp
+       ManifestResourceCompile:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\CGTutorial.exe.embed.manifest.res" Debug\CGTutorial_manifest.rc 
+       Link:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Debug\CGTutorial.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib glu32.lib opengl32.lib external\Debug\glfw3.lib external\Debug\GLEW_190.lib /MANIFEST /ManifestFile:"Debug\CGTutorial.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"Debug/CGTutorial.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Debug\CGTutorial.lib" /MACHINE:X86 Debug\CGTutorial.exe.embed.manifest.res
+         Debug\CGTutorial.obj
+         Debug\objects.obj
+         Debug\objloader.obj
+         Debug\shader.obj
+         Debug\texture.obj  /machine:X86 /debug 
+     1>glfw3.lib(context.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(gamma.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(init.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(input.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(monitor.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(window.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_gamma.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_init.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_joystick.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_monitor.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_time.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_window.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(wgl_context.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>GLEW_190.lib(glew.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\CGTutorial.exe.embed.manifest" /manifest Debug\CGTutorial.exe.intermediate.manifest
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\CGTutorial.exe.embed.manifest.res" Debug\CGTutorial_manifest.rc 
+       LinkEmbedManifest:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Debug\CGTutorial.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib glu32.lib opengl32.lib external\Debug\glfw3.lib external\Debug\GLEW_190.lib /MANIFEST /ManifestFile:"Debug\CGTutorial.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"Debug/CGTutorial.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Debug\CGTutorial.lib" /MACHINE:X86 Debug\CGTutorial.exe.embed.manifest.res
+         Debug\CGTutorial.obj
+         Debug\objects.obj
+         Debug\objloader.obj
+         Debug\shader.obj
+         Debug\texture.obj  /machine:X86 /debug 
+     1>glfw3.lib(context.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(gamma.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(init.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(input.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(monitor.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(window.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_gamma.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_init.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_joystick.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_monitor.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_time.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_window.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(wgl_context.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>GLEW_190.lib(glew.obj) : warning LNK4204: Für "Z:\CGTutorial\Debug\vc100.pdb" fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+         CGTutorial.vcxproj -> Z:\CGTutorial\Debug\CGTutorial.exe
+       FinalizeBuildStatus:
+         Die Datei "Debug\CGTutorial.unsuccessfulbuild" wird gelöscht.
+         Aktualisieren des Timestamps von "Debug\CGTutorial.lastbuildstate".
+     1>Die Erstellung des Projekts "Z:\CGTutorial\CGTutorial.vcxproj" ist abgeschlossen, build Ziel(e).
+
+Das Erstellen war erfolgreich.
+
+Verstrichene Zeit 00:00:08.03
