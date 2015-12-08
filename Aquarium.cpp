@@ -135,7 +135,10 @@ public:
 		TexturObj = loadBMP_custom(imagepath);
 		create();
 	}
-
+	
+	/*
+	* Fuer Glas Obj
+	*/
 	Token(const char * path, const char * imagepath, bool UseRGBA) {
 		path = path;
 		imagepath = imagepath;
@@ -151,6 +154,26 @@ public:
 		glUniform1i(glGetUniformLocation(programID, "myTexturSampler"), 0);
 		glBindVertexArray(VertexArrayIDObj);
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+	}
+	
+	/*
+	* Fuer Glas Obj
+	* Noch etwas verbuggt!
+	*/
+	void draw(bool isRGBA) {
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_ALPHA_TEST);
+		
+		glAlphaFunc(GL_GREATER, 0.1);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, TexturObj);
+		glUniform1i(glGetUniformLocation(programID, "myTexturSampler"), 0);
+		glBindVertexArray(VertexArrayIDObj);
+		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+		
+		glDisable(GL_ALPHA_TEST);
+		glDisable(GL_BLEND);
 	}
 	
 private:
