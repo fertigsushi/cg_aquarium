@@ -108,7 +108,21 @@ void drawSeg(float heigth) {
 	Model = Save;
 }
 
-
+/*
+* ...
+* int main() {
+*	...
+*	Token test("xyz.obj", "abc.bmp");
+*	programID = LoadShaders("StandardShading.vertexshader", "StandardShading.fragmentshader");	
+*	glUseProgram(programID);
+*	while(...) {
+*	...
+*	test.draw();
+*	...
+*	}
+*	...
+*}
+*/
 class Token {
 
 public:
