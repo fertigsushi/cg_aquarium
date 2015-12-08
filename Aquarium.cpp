@@ -13,6 +13,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
+using namespace std;
 
 // Achtung, die OpenGL-Tutorials nutzen glfw 2.7, glfw kommt mit einem veränderten API schon in der Version 3 
 
@@ -106,6 +107,77 @@ void drawSeg(float heigth) {
 	drawSphere(10, 10);
 	Model = Save;
 }
+
+
+class Token {
+
+public:
+
+	Token(const char * path, const char * imagepath) {
+		path = path;
+		imagepath = imagepath;
+		VertexArrayIDObj = 0;
+		res = loadOBJ(path, vertices, uvs, normals);		
+		TexturObj = loadBMP_custom(imagepath);
+		create();
+	}
+
+	Token(const char * path, const char * imagepath, bool UseRGBA) {
+		path = path;
+		imagepath = imagepath;
+		VertexArrayIDObj = 0;
+		res = loadOBJ(path, vertices, uvs, normals);		
+		TexturObj = loadDDS(imagepath);
+		create();
+	}
+
+	void draw() {
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, TexturObj);
+		glUniform1i(glGetUniformLocation(programID, "myTexturSampler"), 0);
+		glBindVertexArray(VertexArrayIDObj);
+		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+	}
+	
+private:
+	
+	void create() {
+		GLuint vertexbuffer;
+		GLuint normalbuffer;
+		GLuint uvsbuffer;
+		glGenVertexArrays(1, &VertexArrayIDObj);
+		glBindVertexArray(VertexArrayIDObj);
+
+		glGenBuffers(1, &vertexbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		glGenBuffers(1, &normalbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+		glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		glGenBuffers(1, &uvsbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, uvsbuffer);
+		glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		glBindVertexArray(0);
+	}
+
+	vector<vec3> vertices; // Buffer
+	vector<vec2> uvs; // Buffer
+	vector<vec3> normals; // Buffer
+	const char * path; // Obj path
+	const char * imagepath; // Textur path
+	GLuint VertexArrayIDObj; // Obj
+	GLuint TexturObj; // Textur
+	bool res; // TexturLoader loadDDS or loadBMP
+};
 
 int main(void) {
 	// Initialise GLFW
