@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+// sin und cos
 #include <math.h>
 
 // Include GLEW
@@ -30,7 +31,92 @@ using namespace std;
 // Ab Uebung7 werden texture.hpp und cpp benoetigt
 #include "texture.hpp"
 
-struct controlVar { 
+class ControlVar { 
+
+public:
+	
+	ControlVar() {
+		aquaX_Angle = 0.0;
+		aquaY_Angle = 0.0;
+		aquaZ_Angle = 0.0;
+		camFraction = 0.1f;
+		camWinkel = 0.0;
+		camLX = 0.0f;
+		camLZ = -1.0;
+		camX = 0.0f; 
+		camZ = 5.0f;
+	}
+	
+	void pressUP() {
+		camX += camLX * camFraction;
+		camZ += camLZ * camFraction;
+	}
+
+	void pressDOWN() {
+		camX -= camLX * camFraction;
+		camZ -= camLZ * camFraction;
+	}
+
+	void pressLEFT() {
+		camWinkel -= 0.01f;
+		camLX = sin(camWinkel);
+		camLZ = -cos(camWinkel);
+	}
+
+	void pressRIGHT() {
+		camWinkel += 0.01f;
+		camLX = sin(camWinkel);
+		camLZ = -cos(camWinkel);
+	}
+
+	void pressX() {
+		aquaX_Angle += 5.0;
+	}
+
+	void pressY() {
+		aquaY_Angle += 5.0;
+	}
+
+	void pressZ() {
+		aquaZ_Angle += 5.0;
+	}
+
+	void pressR() {
+		aquaX_Angle = 0.0;
+		aquaY_Angle = 0.0;
+		aquaZ_Angle = 0.0;
+	}
+
+	float getCamX() {
+		return camX;
+	}
+
+	float getCamZ() {
+		return camZ;
+	}
+
+	float getCamLX() {
+		return camLX + camX;
+	}
+
+	float getCamLZ() {
+		return camLZ + camZ;
+	}
+
+	float getAquaZ() {
+		return aquaZ_Angle;
+	}
+
+	float getAquaY() {
+		return aquaY_Angle;
+	}
+
+	float getAquaX() {
+		return aquaX_Angle;
+	}
+
+private:
+
 	float aquaX_Angle;
 	float aquaY_Angle;
 	float aquaZ_Angle;
@@ -40,7 +126,9 @@ struct controlVar {
 	float camLZ;
 	float camX; 
 	float camZ;
-} conVar = {0.0, 0.0, 0.0, 0.1f, 0.0, 0.0f, -1.0f, 0.0f, 5.0f};
+};
+
+ControlVar conVar;
 
 void error_callback(int error, const char* description) {
 	fputs(description, stderr);
@@ -52,36 +140,28 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			glfwSetWindowShouldClose(window, GL_TRUE);
 			break;
 		case GLFW_KEY_Y:
-			conVar.aquaY_Angle += 5.0;
+			conVar.pressY();
 			break;
 		case GLFW_KEY_X:
-			conVar.aquaX_Angle += 5.0;
+			conVar.pressX();
 			break;
 		case GLFW_KEY_Z:
-			conVar.aquaZ_Angle += 5.0;
+			conVar.pressZ();
 			break;
 		case GLFW_KEY_R:
-			conVar.aquaX_Angle = 0.0;
-			conVar.aquaY_Angle = 0.0;
-			conVar.aquaZ_Angle = 0.0;
+			conVar.pressR();
 			break;
 		case GLFW_KEY_LEFT :
-			conVar.camWinkel -= 0.01f;
-			conVar.camLX = sin(conVar.camWinkel);
-			conVar.camLZ = -cos(conVar.camWinkel);
+			conVar.pressLEFT();
 			break;
 		case GLFW_KEY_RIGHT :
-			conVar.camWinkel += 0.01f;
-			conVar.camLX = sin(conVar.camWinkel);
-			conVar.camLZ = -cos(conVar.camWinkel);
+			conVar.pressRIGHT();
 			break;
 		case GLFW_KEY_UP :
-			conVar.camX += conVar.camLX * conVar.camFraction;
-			conVar.camZ += conVar.camLZ * conVar.camFraction;
+			conVar.pressUP();
 			break;
 		case GLFW_KEY_DOWN :
-			conVar.camX -= conVar.camLX * conVar.camFraction;
-			conVar.camZ -= conVar.camLZ * conVar.camFraction;
+			conVar.pressDOWN();
 			break;
 		default:
 			break;
@@ -234,14 +314,16 @@ public:
 
 	Control() {}
 
-	void setCamPos(mat4& View, controlVar& conVar) {
-		View = lookAt(vec3(conVar.camX, 1.0f, conVar.camZ), vec3(conVar.camX + conVar.camLX , 1.0f, conVar.camZ + conVar.camLZ), vec3(0.0f, 1.0f,  0.0f));
+	void setCamPos(mat4& View, ControlVar conVar) {
+		View = lookAt(vec3(conVar.getCamX(), 1.0f, conVar.getCamZ()), 
+			vec3(conVar.getCamLX(), 1.0f, conVar.getCamLZ()), 
+			vec3(0.0f, 1.0f,  0.0f));
 	}
 
-	void rotateAqua(mat4& Model, controlVar& conVar) {
-		Model = rotate(Model, conVar.aquaY_Angle, vec3(0.0, 1.0, 0.0));
-		Model = rotate(Model, conVar.aquaZ_Angle, vec3(0.0, 0.0, 1.0));
-		Model = rotate(Model, conVar.aquaX_Angle, vec3(1.0, 0.0, 0.0));
+	void rotateAqua(mat4& Model, ControlVar conVar) {
+		Model = rotate(Model, conVar.getAquaY(), vec3(0.0, 1.0, 0.0));
+		Model = rotate(Model, conVar.getAquaZ(), vec3(0.0, 0.0, 1.0));
+		Model = rotate(Model, conVar.getAquaX(), vec3(1.0, 0.0, 0.0));
 	}
 
 	void setOrigin(mat4& Model, float f) {
