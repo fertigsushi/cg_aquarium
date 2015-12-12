@@ -1,9 +1,14 @@
-﻿Der Buildvorgang wurde am 08.12.2015 12:51:37 gestartet.
-     1>Projekt "C:\a_privat\proggen\workspace\cg_aquarium\CGTutorial.vcxproj" auf Knoten "2", Build Ziel(e).
+﻿Der Buildvorgang wurde am 12.12.2015 02:09:58 gestartet.
+     1>Projekt "C:\Users\Julian\Dropbox\cg_aquarium\CGTutorial.vcxproj" auf Knoten "2", Build Ziel(e).
      1>Link:
-         CGTutorial.vcxproj -> C:\a_privat\proggen\workspace\cg_aquarium\Debug\CGTutorial.exe
-     1>Die Erstellung des Projekts "C:\a_privat\proggen\workspace\cg_aquarium\CGTutorial.vcxproj" ist abgeschlossen, Build Ziel(e).
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Debug\CGTutorial.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib glu32.lib opengl32.lib external\Debug\glfw3.lib external\Debug\GLEW_190.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Debug\CGTutorial.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Debug\CGTutorial.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug Debug\Aquarium.obj
+         Debug\objects.obj
+         Debug\objloader.obj
+         Debug\shader.obj
+         Debug\texture.obj
+     1>LINK : fatal error LNK1104: Datei "external\Debug\glfw3.lib" kann nicht geöffnet werden.
+     1>Die Erstellung des Projekts "C:\Users\Julian\Dropbox\cg_aquarium\CGTutorial.vcxproj" ist abgeschlossen, Build Ziel(e) -- FEHLER.
 
-Build erfolgreich.
+Fehler beim Buildvorgang.
 
-Verstrichene Zeit 00:00:00.23
+Verstrichene Zeit 00:00:00.10

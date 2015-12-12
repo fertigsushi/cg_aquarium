@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+#include <math.h>
 
 // Include GLEW
 #include <GL/glew.h>
@@ -215,6 +216,103 @@ private:
 	GLuint TexturObj; // Textur
 	bool res; // TexturLoader loadDDS or loadBMP
 };
+
+/**
+*
+*
+*/
+class Control {
+	
+public:
+
+	Control() {
+		aquaX_Angle = 0.0;
+		aquaY_Angle = 0.0;
+		aquaZ_Angle = 0.0;
+		camFraction = 0.1f;
+		// angle of rotation for the camera direction
+		camWinkel = 0.0;
+		// actual vector representing the camera's direction
+		camLX = 0.0f;
+		camLZ =- 1.0f;
+		// XZ position of the camera
+		camX = 0.0f; 
+		camZ = 5.0f;
+	}
+
+	void setCamPos(mat4& View) {
+		View = lookAt(vec3(camX, 1.0f, camZ), vec3(camX + camLX , 1.0f,  camZ + camLZ), vec3(0.0f, 1.0f,  0.0f));
+	}
+
+	void rotateAqua(mat4& Model) {
+		Model = rotate(Model, aquaY_Angle, vec3(0.0, 1.0, 0.0));
+		Model = rotate(Model, aquaZ_Angle, vec3(0.0, 0.0, 1.0));
+		Model = rotate(Model, aquaX_Angle, vec3(1.0, 0.0, 0.0));
+	}
+
+	void setAqua(mat4& Model, float f) {
+		Model = mat4(f);
+	}
+
+	void setPerspective(mat4& Projection, float x, float y, float z, float w) {
+		Projection = perspective(x, y, z, w);
+	}
+	
+	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+		switch (key) {
+			case GLFW_KEY_ESCAPE:
+				glfwSetWindowShouldClose(window, GL_TRUE);
+				break;
+			case GLFW_KEY_Y:
+				aquaY_Angle += 5.0;
+				break;
+			case GLFW_KEY_X:
+				aquaX_Angle += 5.0;
+				break;
+			case GLFW_KEY_Z:
+				aquaZ_Angle += 5.0;
+				break;
+			case GLFW_KEY_R:
+				aquaX_Angle = 0.0;
+				aquaY_Angle = 0.0;
+				aquaZ_Angle = 0.0;
+				break;
+			case GLFW_KEY_LEFT :
+				camWinkel -= 0.01f;
+				camLX = sin(camWinkel);
+				camLZ = -cos(camWinkel);
+				break;
+			case GLFW_KEY_RIGHT :
+				camWinkel += 0.01f;
+				camLX = sin(camWinkel);
+				camLZ = -cos(camWinkel);
+				break;
+			case GLFW_KEY_UP :
+				camX += camLX * camFraction;
+				camZ += camLZ * camFraction;
+				break;
+			case GLFW_KEY_DOWN :
+				camX -= camLX * camFraction;
+				camZ -= camLZ * camFraction;
+				break;
+			default:
+				break;
+	}
+}
+
+private:
+
+	float aquaX_Angle;
+	float aquaY_Angle;
+	float aquaZ_Angle;
+	float camFraction;
+	float camWinkel;
+	float camLX;
+	float camLZ;
+	float camX; 
+	float camZ;
+};
+
 
 int main(void) {
 	// Initialise GLFW
