@@ -30,54 +30,61 @@ using namespace std;
 // Ab Uebung7 werden texture.hpp und cpp benoetigt
 #include "texture.hpp"
 
+struct controlVar { 
+	float aquaX_Angle;
+	float aquaY_Angle;
+	float aquaZ_Angle;
+	float camFraction;
+	float camWinkel;
+	float camLX;
+	float camLZ;
+	float camX; 
+	float camZ;
+} conVar = {0.0, 0.0, 0.0, 0.1f, 0.0, 0.0f, -1.0f, 0.0f, 5.0f};
+
 void error_callback(int error, const char* description) {
 	fputs(description, stderr);
 }
 
-float angleX = 0.0f;
-float angleY = 0.0f;
-float angleZ = 0.0f;
-float angle2nd = 0.0f;
-float angle3rd = 0.0f;
-float speed = 1.5;
-
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	switch (key) {
-	case GLFW_KEY_W:
-		angleX += speed;
-		break;
-	case GLFW_KEY_S:
-		angleX -= speed;
-		break;
-	case GLFW_KEY_A:
-		angleZ -= speed;
-		break;
-	case GLFW_KEY_D:
-		angleZ += speed;
-		break;
-	case GLFW_KEY_E:
-		angleY -= speed;
-		break;
-	case GLFW_KEY_Q:
-		angleY += speed;
-		break;
-	case GLFW_KEY_R:
-		angle2nd += speed;
-		break;
-	case GLFW_KEY_F:
-		angle2nd -= speed;
-		break;
-	case GLFW_KEY_T:
-		angle3rd += speed;
-		break;
-	case GLFW_KEY_G:
-		angle3rd -= speed;
-		break;
-	case GLFW_KEY_ESCAPE:
-		glfwSetWindowShouldClose(window, GL_TRUE);
-		break;
-	default:
-		break;
+		case GLFW_KEY_ESCAPE:
+			glfwSetWindowShouldClose(window, GL_TRUE);
+			break;
+		case GLFW_KEY_Y:
+			conVar.aquaY_Angle += 5.0;
+			break;
+		case GLFW_KEY_X:
+			conVar.aquaX_Angle += 5.0;
+			break;
+		case GLFW_KEY_Z:
+			conVar.aquaZ_Angle += 5.0;
+			break;
+		case GLFW_KEY_R:
+			conVar.aquaX_Angle = 0.0;
+			conVar.aquaY_Angle = 0.0;
+			conVar.aquaZ_Angle = 0.0;
+			break;
+		case GLFW_KEY_LEFT :
+			conVar.camWinkel -= 0.01f;
+			conVar.camLX = sin(conVar.camWinkel);
+			conVar.camLZ = -cos(conVar.camWinkel);
+			break;
+		case GLFW_KEY_RIGHT :
+			conVar.camWinkel += 0.01f;
+			conVar.camLX = sin(conVar.camWinkel);
+			conVar.camLZ = -cos(conVar.camWinkel);
+			break;
+		case GLFW_KEY_UP :
+			conVar.camX += conVar.camLX * conVar.camFraction;
+			conVar.camZ += conVar.camLZ * conVar.camFraction;
+			break;
+		case GLFW_KEY_DOWN :
+			conVar.camX -= conVar.camLX * conVar.camFraction;
+			conVar.camZ -= conVar.camLZ * conVar.camFraction;
+			break;
+		default:
+			break;
 	}
 }
 
@@ -225,242 +232,81 @@ class Control {
 	
 public:
 
-	Control() {
-		aquaX_Angle = 0.0;
-		aquaY_Angle = 0.0;
-		aquaZ_Angle = 0.0;
-		camFraction = 0.1f;
-		// angle of rotation for the camera direction
-		camWinkel = 0.0;
-		// actual vector representing the camera's direction
-		camLX = 0.0f;
-		camLZ =- 1.0f;
-		// XZ position of the camera
-		camX = 0.0f; 
-		camZ = 5.0f;
+	Control() {}
+
+	void setCamPos(mat4& View, controlVar& conVar) {
+		View = lookAt(vec3(conVar.camX, 1.0f, conVar.camZ), vec3(conVar.camX + conVar.camLX , 1.0f, conVar.camZ + conVar.camLZ), vec3(0.0f, 1.0f,  0.0f));
 	}
 
-	void setCamPos(mat4& View) {
-		View = lookAt(vec3(camX, 1.0f, camZ), vec3(camX + camLX , 1.0f,  camZ + camLZ), vec3(0.0f, 1.0f,  0.0f));
+	void rotateAqua(mat4& Model, controlVar& conVar) {
+		Model = rotate(Model, conVar.aquaY_Angle, vec3(0.0, 1.0, 0.0));
+		Model = rotate(Model, conVar.aquaZ_Angle, vec3(0.0, 0.0, 1.0));
+		Model = rotate(Model, conVar.aquaX_Angle, vec3(1.0, 0.0, 0.0));
 	}
 
-	void rotateAqua(mat4& Model) {
-		Model = rotate(Model, aquaY_Angle, vec3(0.0, 1.0, 0.0));
-		Model = rotate(Model, aquaZ_Angle, vec3(0.0, 0.0, 1.0));
-		Model = rotate(Model, aquaX_Angle, vec3(1.0, 0.0, 0.0));
-	}
-
-	void setAqua(mat4& Model, float f) {
+	void setOrigin(mat4& Model, float f) {
 		Model = mat4(f);
 	}
 
 	void setPerspective(mat4& Projection, float x, float y, float z, float w) {
 		Projection = perspective(x, y, z, w);
 	}
-	
-	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-		switch (key) {
-			case GLFW_KEY_ESCAPE:
-				glfwSetWindowShouldClose(window, GL_TRUE);
-				break;
-			case GLFW_KEY_Y:
-				aquaY_Angle += 5.0;
-				break;
-			case GLFW_KEY_X:
-				aquaX_Angle += 5.0;
-				break;
-			case GLFW_KEY_Z:
-				aquaZ_Angle += 5.0;
-				break;
-			case GLFW_KEY_R:
-				aquaX_Angle = 0.0;
-				aquaY_Angle = 0.0;
-				aquaZ_Angle = 0.0;
-				break;
-			case GLFW_KEY_LEFT :
-				camWinkel -= 0.01f;
-				camLX = sin(camWinkel);
-				camLZ = -cos(camWinkel);
-				break;
-			case GLFW_KEY_RIGHT :
-				camWinkel += 0.01f;
-				camLX = sin(camWinkel);
-				camLZ = -cos(camWinkel);
-				break;
-			case GLFW_KEY_UP :
-				camX += camLX * camFraction;
-				camZ += camLZ * camFraction;
-				break;
-			case GLFW_KEY_DOWN :
-				camX -= camLX * camFraction;
-				camZ -= camLZ * camFraction;
-				break;
-			default:
-				break;
+
+	void setLightPos(float x, float y, float z) {
+		vec3 lightPos = vec3(x, y, z);
+		glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y, lightPos.z);
 	}
-}
-
-private:
-
-	float aquaX_Angle;
-	float aquaY_Angle;
-	float aquaZ_Angle;
-	float camFraction;
-	float camWinkel;
-	float camLX;
-	float camLZ;
-	float camX; 
-	float camZ;
 };
 
 
 int main(void) {
-	// Initialise GLFW
+	
 	if (!glfwInit()) {
 		fprintf(stderr, "Failed to initialize GLFW\n");
 		exit(EXIT_FAILURE);
 	}
-
-	// Fehler werden auf stderr ausgegeben, s. o.
 	glfwSetErrorCallback(error_callback);
-
-	// Open a window and create its OpenGL context
-	// glfwWindowHint vorher aufrufen, um erforderliche Resourcen festzulegen
-	GLFWwindow* window = glfwCreateWindow(1024, // Breite
-		768,  // Hoehe
-		"CG - Tutorial", // Ueberschrift
-		NULL,  // windowed mode
-		NULL); // shared windoe
-
+	GLFWwindow* window = glfwCreateWindow(1024, 768,"CG - Tutorial", NULL, NULL);
 	if (!window) {
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
-
-	// Make the window's context current (wird nicht automatisch gemacht)
-	glfwMakeContextCurrent(window);
-
-	// Initialize GLEW
-	// GLEW ermöglicht Zugriff auf OpenGL-API > 1.1
-	glewExperimental = true; // Needed for core profile
-
+    glfwMakeContextCurrent(window);
+	glewExperimental = true;
 	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "Failed to initialize GLEW\n");
 		return -1;
 	}
-
-	// Auf Keyboard-Events reagieren
 	glfwSetKeyCallback(window, key_callback);
-
-	// Dark blue background
 	glClearColor(0.6f, 0.6f, 0.8f, 0.0f);
-
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+	
+	Control control;
+	
+	Token fish("fish.obj", "mandrill.bmp");
 
-	// Create and compile our GLSL program from the shaders
-	//programID = LoadShaders("StandardShading.vertexshader", "StandardShading.fragmentshader");
 	programID = LoadShaders("StandardShading.vertexshader", "StandardShading.fragmentshader");
-
-	// Shader auch benutzen !
 	glUseProgram(programID);
-
-	// Jedes Objekt eigenem VAO zuordnen, damit mehrere Objekte moeglich sind
-	// VAOs sind Container fuer mehrere Buffer, die zusammen gesetzt werden sollen.
-	GLuint VertexArrayIDTeapot;
-	glGenVertexArrays(1, &VertexArrayIDTeapot);
-	glBindVertexArray(VertexArrayIDTeapot);
-
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec2> uvs;
-	std::vector<glm::vec3> normals; 
-	bool res = loadOBJ("teapot.obj", vertices, uvs, normals);
-
-	// Ein ArrayBuffer speichert Daten zu Eckpunkten (hier xyz bzw. Position)
-	GLuint vertexbuffer;
-	glGenBuffers(1, &vertexbuffer); // Kennung erhalten
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer); // Daten zur Kennung definieren
-	// Buffer zugreifbar für die Shader machen
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
-
-	// Erst nach glEnableVertexAttribArray kann DrawArrays auf die Daten zugreifen...
-	glEnableVertexAttribArray(0); // siehe layout im vertex shader: location = 0 
-	glVertexAttribPointer(0,  // location = 0 
-		3,  // Datenformat vec3: 3 floats fuer xyz 
-		GL_FLOAT, 
-		GL_FALSE, // Fixedpoint data normalisieren ?
-		0, // Eckpunkte direkt hintereinander gespeichert
-		(void*) 0); // abweichender Datenanfang ? 
-
-	GLuint normalbuffer; // Hier alles analog für Normalen in location == 2
-	glGenBuffers(1, &normalbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(2); // siehe layout im vertex shader 
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	
-	GLuint uvbuffer; // Hier alles analog für Texturkoordinaten in location == 1 (2 floats u und v!)
-	glGenBuffers(1, &uvbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(1); // siehe layout im vertex shader 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	
-	// Load the texture
-	GLuint Texture = loadBMP_custom("mandrill.bmp");
 
 	// Eventloop
 	while (!glfwWindowShouldClose(window))	{
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
-
-		// Projection matrix : 45° Field of View, 4:3 ratio, display range (zNear, zFar): 0.1 unit <-> 100 units
-		Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-
-		// Camera matrix
-		View = glm::lookAt(glm::vec3(0,0,-5), // Camera is at (0,0,-5), in World Space
-			glm::vec3(0,0,0),  // and looks at the origin
-			glm::vec3(0,1,0)); // Head is up (set to 0,-1,0 to look upside-down)
-				
-		// Model matrix : an identity matrix (model will be at the origin)
-		Model = glm::mat4(1.0f);
 		
-		glm::mat4 Save = Model;
-
-		Model = glm::translate(Model, glm::vec3(1.5, 0.0, 0.0));
-		Model = glm::scale(Model, glm::vec3(1.0 / 1000.0, 1.0 / 1000.0, 1.0 / 1000.0));
+		control.setPerspective(Projection, 45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+		
+		control.setCamPos(View, conVar);
+		
+		control.setLightPos(4, 4, -4);
+		
+		control.setOrigin(Model, 1.0f);
+		
+		control.rotateAqua(Model, conVar);
+		
 		sendMVP();
 
-		//drawWireCube();
-		//drawCube();
-		
-		//Bind our texture in Texture Unit 0
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, Texture);
-		
-		// Set our "myTextureSampler" sampler to user Texture Unit 0
-		glUniform1i(glGetUniformLocation(programID, "myTextureSampler"), 0);
-
-		glBindVertexArray(VertexArrayIDTeapot);
-		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-
-		Model = Save;
-		
-		Model = glm::rotate(Model, angleX, glm::vec3(1.0, 0.0, 0.0));
-		Model = glm::rotate(Model, angleY, glm::vec3(0.0, 1.0, 0.0));
-		Model = glm::rotate(Model, angleZ, glm::vec3(0.0, 0.0, 1.0));
-
-		drawSeg(1.0);
-		Model = glm::translate(Model, glm::vec3(0.0, 1.0, 0.0));
-		Model = glm::rotate(Model, angle2nd, glm::vec3(1.0, 0.0, 0.0));
-		drawSeg(0.8);
-		Model = glm::translate(Model, glm::vec3(0.0, 0.8, 0.0));
-		Model = glm::rotate(Model, angle3rd, glm::vec3(1.0, 0.0, 0.0));
-		drawSeg(0.6);
-
-		glm::vec4 maVec = Model * glm::vec4(0.0, 0.61, 0.0, 1.0);
-		glm::vec3 lightPos = glm::vec3(maVec.x, maVec.y, maVec.z);
-		glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y, lightPos.z);
+		fish.draw();
 		
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -472,10 +318,10 @@ int main(void) {
 	glDeleteProgram(programID);
 
 	// Cleanup VBO and shader
-	glDeleteBuffers(1, &vertexbuffer);
-	glDeleteBuffers(1, &normalbuffer);
-	glDeleteBuffers(1, &uvbuffer);
-	glDeleteTextures(1, &Texture);
+	//glDeleteBuffers(1, &vertexbuffer);
+	//glDeleteBuffers(1, &normalbuffer);
+	//glDeleteBuffers(1, &uvbuffer);
+	//glDeleteTextures(1, &Texture);
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
