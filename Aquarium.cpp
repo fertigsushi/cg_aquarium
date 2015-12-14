@@ -218,6 +218,7 @@ public:
 	Token(const char * path, const char * imagepath) {
 		path = path;
 		imagepath = imagepath;
+		Model = mat4(1.0f);
 		VertexArrayIDObj = 0;
 		res = loadOBJ(path, vertices, uvs, normals);		
 		TexturObj = loadBMP_custom(imagepath);
@@ -230,6 +231,7 @@ public:
 	Token(const char * path, const char * imagepath, bool UseRGBA) {
 		path = path;
 		imagepath = imagepath;
+		Model = mat4(1.0f);
 		VertexArrayIDObj = 0;
 		res = loadOBJ(path, vertices, uvs, normals);		
 		TexturObj = loadDDS(imagepath);
@@ -264,6 +266,13 @@ public:
 		glDisable(GL_BLEND);
 	}
 	
+	void sendMVP(mat4& Projection , mat4& View ) {
+		mat4 MVP = Projection * View * Model; 
+		glUniformMatrix4fv(glGetUniformLocation(programID, "MVP"), 1, GL_FALSE, &MVP[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(programID, "V"), 1, GL_FALSE, &View[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(programID, "M"), 1, GL_FALSE, &Model[0][0]);
+	}
+	
 private:
 	
 	void create() {
@@ -293,7 +302,8 @@ private:
 
 		glBindVertexArray(0);
 	}
-
+	
+	mat4 Model;
 	vector<vec3> vertices; // Buffer
 	vector<vec2> uvs; // Buffer
 	vector<vec3> normals; // Buffer
