@@ -219,7 +219,6 @@ public:
 		path = path;
 		imagepath = imagepath;
 		Model = mat4(1.0f);
-		isFishWiggleLeft = true;
 		VertexArrayIDObj = 0;
 		res = loadOBJ(path, vertices, uvs, normals);		
 		TexturObj = loadBMP_custom(imagepath);
@@ -233,7 +232,6 @@ public:
 		path = path;
 		imagepath = imagepath;
 		Model = mat4(1.0f);
-		isFishWiggleLeft = true;
 		VertexArrayIDObj = 0;
 		res = loadOBJ(path, vertices, uvs, normals);		
 		TexturObj = loadDDS(imagepath);
@@ -275,9 +273,9 @@ public:
 		glUniformMatrix4fv(glGetUniformLocation(programID, "M"), 1, GL_FALSE, &Model[0][0]);
 	}
 	
-	void wiggle(float x, float y, float z) {
+	void wiggle(float x, float y, float z, float zRotate) {
 		Model = mat4(1.0f);
-		wiggleRotate();
+		wiggleRotate(zRotate);
 		Model = translate(Model, vec3(x, y, z));
 	}
 
@@ -287,14 +285,8 @@ public:
 	
 private:
 
-	void wiggleRotate() {
-		if (isFishWiggleLeft) {
-			Model = rotate(Model, 2.0f, vec3(0.0, 1.0, 0.0));
-			isFishWiggleLeft = false; 
-		} else {
-			Model = rotate(Model, -2.0f, vec3(0.0, 1.0, 0.0));
-			isFishWiggleLeft = true; 
-		} 
+	void wiggleRotate(float zRotate) {
+		Model = rotate(Model, zRotate, vec3(0.0, 1.0, 0.0));
 	}
 	
 	void create() {
@@ -334,7 +326,6 @@ private:
 	GLuint VertexArrayIDObj; // Obj
 	GLuint TexturObj; // Textur
 	bool res; // TexturLoader loadDDS or loadBMP
-	bool isFishWiggleLeft;
 };
 
 /**
@@ -405,12 +396,15 @@ int main(void) {
 	programID = LoadShaders("StandardShading.vertexshader", "StandardShading.fragmentshader");
 	glUseProgram(programID);
 	
+	// Zum Testen Fisch bewegung
 	float x = 0.0;
 	float y = 0.0;
 	float z = 0.0;
+	float zRotate = -1.6;
 	bool isWiggleLeft = false; // x
 	bool isWiggleDown = false; // y
 	bool isWiggleDepth = false; // z
+	bool isWiggleRotateLeft = false; // zRotate
 	
 	// Eventloop
 	while (!glfwWindowShouldClose(window))	{
@@ -421,7 +415,7 @@ int main(void) {
 		
 		control.setCamPos(View, conVar);
 		
-		control.setLightPos(0, 4, 0);
+		control.setLightPos(0, 4, 1);
 		
 		control.setOrigin(Model, 1.0f);
 		
@@ -429,17 +423,17 @@ int main(void) {
 
 		ground.draw();
 
-		fish.wiggle(x, y, z);
+		fish.wiggle(x, y, z, zRotate);
 		
 		fish.sendMVP(Projection, View);
 
 		fish.draw();
 
-		// Zum Testen
+		// Zum Testen Fisch bewegung
 		if (isWiggleLeft) {
-			x -= 0.001;
+			x -= 0.0005;
 		} else {
-			x += 0.001;
+			x += 0.0005;
 		}
 
 		if (x > 4.0 && !isWiggleLeft) {
@@ -470,6 +464,18 @@ int main(void) {
 			isWiggleDepth = true;
 		} else if (z < -0.6 && isWiggleDepth) {
 			isWiggleDepth = false;
+		}
+		
+		if (isWiggleRotateLeft) {
+			zRotate -= 0.1;
+		} else {
+			zRotate += 0.1;
+		}
+
+		if (zRotate > 1.6 && !isWiggleRotateLeft) {
+			isWiggleRotateLeft = true;
+		} else if (zRotate < -1.6 && isWiggleRotateLeft) {
+			isWiggleRotateLeft = false;
 		}
 		
 		// Swap buffers
