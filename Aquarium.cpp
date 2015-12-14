@@ -271,8 +271,8 @@ public:
 			vec3(0.0f, 1.0f,  0.0f));
 	}
 
-	void setOrigin(mat4& Model, float f) {
-		Model = mat4(f);
+	void setOrigin(mat4& Model) {
+		Model = mat4(1.0f);
 	}
 
 	void setPerspective(mat4& Projection, float x, float y, float z, float w) {
@@ -286,8 +286,11 @@ public:
 		glUniform3f(glGetUniformLocation(programID, "lightColor"), lightColor.r, lightColor.g, lightColor.b);
 	}
 
-	void fishControl(bool isWiggleLeft, float wiggle) {
-
+	void sendMVP(mat4& Model) {
+		mat4 MVP = Projection * View * Model; 
+		glUniformMatrix4fv(glGetUniformLocation(programID, "MVP"), 1, GL_FALSE, &MVP[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(programID, "V"), 1, GL_FALSE, &View[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(programID, "M"), 1, GL_FALSE, &Model[0][0]);
 	}
 };
 
@@ -505,25 +508,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 }
 
-void sendMVP() {
-	glm::mat4 MVP = Projection * View * Model; 
-	glUniformMatrix4fv(glGetUniformLocation(programID, "MVP"), 1, GL_FALSE, &MVP[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(programID, "V"), 1, GL_FALSE, &View[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(programID, "M"), 1, GL_FALSE, &Model[0][0]);
-}
-
-void sendMVP(mat4& Model) {
-	mat4 MVP = Projection * View * Model; 
-	glUniformMatrix4fv(glGetUniformLocation(programID, "MVP"), 1, GL_FALSE, &MVP[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(programID, "V"), 1, GL_FALSE, &View[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(programID, "M"), 1, GL_FALSE, &Model[0][0]);
-}
-
 void drawSeg(float heigth) {
 	glm::mat4 Save = Model;
 	Model = glm::translate(Model, glm::vec3(0.0, heigth / 2.0, 0.0));
 	Model = glm::scale(Model, glm::vec3(0.15, heigth / 2.0, 0.15));
-	sendMVP();
+	//sendMVP();
 	drawSphere(10, 10);
 	Model = Save;
 }
@@ -558,8 +547,8 @@ int main(void) {
 	
 	Token fish("fish.obj", "fish.bmp");
 	Token ground("ground.obj", "sand.bmp");
-	Token plant1("plant.obj", "blatt.bmp");
-	Token plant2("plant2.obj", "redplant.bmp");
+	Token plant1("plant.obj", "redplant.bmp");
+	Token plant2("plant2.obj", "blatt.bmp");
 	Token aquar("aquarium.obj", "aquarium.bmp");
 	Token glass("glass.obj", "glass.dds", /*RGBA*/true);
 
@@ -577,9 +566,9 @@ int main(void) {
 		
 		SceCont.setLightPos(0.0, 4.5, 1.0);
 		
-		SceCont.setOrigin(Model, 1.0f);
+		SceCont.setOrigin(Model);
 		
-		sendMVP();
+		SceCont.sendMVP(Model);
 
 		ground.draw();
 		aquar.draw();
