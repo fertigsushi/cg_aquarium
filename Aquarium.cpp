@@ -19,9 +19,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-using namespace glm;
-using namespace std;
-
 // Achtung, die OpenGL-Tutorials nutzen glfw 2.7, glfw kommt mit einem veränderten API schon in der Version 3 
 
 // Befindet sich bei den OpenGL-Tutorials unter "common"
@@ -36,109 +33,15 @@ using namespace std;
 // Ab Uebung7 werden texture.hpp und cpp benoetigt
 #include "texture.hpp"
 
+using namespace glm;
+using namespace std;
+
 // Diese Drei Matrizen global (Singleton-Muster), damit sie jederzeit modifiziert und
 // an die Grafikkarte geschickt werden koennen
 glm::mat4 Projection;
 glm::mat4 View;
 glm::mat4 Model;
 GLuint programID;
-
-class ControlVar { 
-
-public:
-	
-	ControlVar() {
-		aquaX_Angle = 0.0;
-		aquaY_Angle = 0.0;
-		aquaZ_Angle = 0.0;
-		camFraction = 0.1f;
-		camWinkel = 0.0;
-		camLX = 0.0f;
-		camLZ = -1.0;
-		camX = 0.0f; 
-		camZ = 5.0f;
-	}
-	
-	void pressUP() {
-		camX += camLX * camFraction;
-		camZ += camLZ * camFraction;
-	}
-
-	void pressDOWN() {
-		camX -= camLX * camFraction;
-		camZ -= camLZ * camFraction;
-	}
-
-	void pressLEFT() {
-		camWinkel -= 0.01f;
-		camLX = sin(camWinkel);
-		camLZ = -cos(camWinkel);
-	}
-
-	void pressRIGHT() {
-		camWinkel += 0.01f;
-		camLX = sin(camWinkel);
-		camLZ = -cos(camWinkel);
-	}
-
-	void pressX() {
-		aquaX_Angle += 5.0;
-	}
-
-	void pressY() {
-		aquaY_Angle += 5.0;
-	}
-
-	void pressZ() {
-		aquaZ_Angle += 5.0;
-	}
-
-	void pressR() {
-		aquaX_Angle = 0.0;
-		aquaY_Angle = 0.0;
-		aquaZ_Angle = 0.0;
-	}
-
-	float getCamX() {
-		return camX;
-	}
-
-	float getCamZ() {
-		return camZ;
-	}
-
-	float getCamLX() {
-		return camLX + camX;
-	}
-
-	float getCamLZ() {
-		return camLZ + camZ;
-	}
-
-	float getAquaZ() {
-		return aquaZ_Angle;
-	}
-
-	float getAquaY() {
-		return aquaY_Angle;
-	}
-
-	float getAquaX() {
-		return aquaX_Angle;
-	}
-
-private:
-
-	float aquaX_Angle;
-	float aquaY_Angle;
-	float aquaZ_Angle;
-	float camFraction;
-	float camWinkel;
-	float camLX;
-	float camLZ;
-	float camX; 
-	float camZ;
-};
 
 /*
 * ...
@@ -286,22 +189,86 @@ private:
 	bool res; // TexturLoader loadDDS or loadBMP
 };
 
-class Control {
+class KeyControl { 
+
+public:
+	
+	KeyControl() {
+		camFraction = 0.1f;
+		camWinkel = 0.0;
+		camLX = 0.0f;
+		camLZ = -1.0;
+		camX = 0.0f; 
+		camZ = 5.0f;
+	}
+	
+	void pressUP() {
+		camX += camLX * camFraction;
+		camZ += camLZ * camFraction;
+	}
+
+	void pressDOWN() {
+		camX -= camLX * camFraction;
+		camZ -= camLZ * camFraction;
+	}
+
+	void pressLEFT() {
+		camWinkel -= 0.01f;
+		camLX = sin(camWinkel);
+		camLZ = -cos(camWinkel);
+	}
+
+	void pressRIGHT() {
+		camWinkel += 0.01f;
+		camLX = sin(camWinkel);
+		camLZ = -cos(camWinkel);
+	}
+
+	void pressR() {
+		camFraction = 0.1f;
+		camWinkel = 0.0;
+		camLX = 0.0f;
+		camLZ = -1.0;
+		camX = 0.0f; 
+		camZ = 5.0f;
+	}
+
+	float getCamX() {
+		return camX;
+	}
+
+	float getCamZ() {
+		return camZ;
+	}
+
+	float getCamLX() {
+		return camLX + camX;
+	}
+
+	float getCamLZ() {
+		return camLZ + camZ;
+	}
+
+private:
+
+	float camFraction;
+	float camWinkel;
+	float camLX;
+	float camLZ;
+	float camX; 
+	float camZ;
+};
+
+class SceneControl {
 	
 public:
 
-	Control() {}
+	SceneControl() {}
 
-	void setCamPos(mat4& View, ControlVar conVar) {
-		View = lookAt(vec3(conVar.getCamX(), 1.0f, conVar.getCamZ()), 
-			vec3(conVar.getCamLX(), 1.0f, conVar.getCamLZ()), 
+	void setCamPos(mat4& View, KeyControl contKey) {
+		View = lookAt(vec3(contKey.getCamX(), 1.0f, contKey.getCamZ()), 
+			vec3(contKey.getCamLX(), 1.0f, contKey.getCamLZ()), 
 			vec3(0.0f, 1.0f,  0.0f));
-	}
-
-	void rotateAqua(mat4& Model, ControlVar conVar) {
-		Model = rotate(Model, conVar.getAquaY(), vec3(0.0, 1.0, 0.0));
-		Model = rotate(Model, conVar.getAquaZ(), vec3(0.0, 0.0, 1.0));
-		Model = rotate(Model, conVar.getAquaX(), vec3(1.0, 0.0, 0.0));
 	}
 
 	void setOrigin(mat4& Model, float f) {
@@ -348,8 +315,29 @@ public:
 		isWiggleDepth = false; // z
 		isWiggleRotateLeft = false; // zRotate
 	}
-		// plant
-		MoveControl(float limit) {
+	// Fish 2
+	MoveControl(float xLimMin, float xLimMax, float yLim, float zLim, float zRotLim, float x, float y, float z) {
+		xLimitMin = xLimMin;
+		xLimitMax = xLimMax;
+		yLimit = yLim;
+		zLimit = zLim;
+		zRotateLim = zRotLim;
+		x = x;
+		y = y;
+		z = z;
+		zRotate = -1.6;
+		xSpeed = 0.0005;
+		ySpeed = 0.0001;
+		zSpeed = 0.0002;
+		zRotateSpeed = 0.1;
+		isWiggleLeft = false; // x
+		isWiggleDown = false; // y
+		isWiggleDepth = false; // z
+		isWiggleRotateLeft = false; // zRotate
+	}
+
+	// plant
+	MoveControl(float limit) {
 		xLimitMin = limit;
 		xLimitMax = limit;
 		yLimit = limit;
@@ -486,7 +474,7 @@ private:
 	bool isWiggleRotateLeft; // zRotate
 };
 
-ControlVar conVar;
+KeyControl contKey;
 
 void error_callback(int error, const char* description) {
 	fputs(description, stderr);
@@ -497,29 +485,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		case GLFW_KEY_ESCAPE:
 			glfwSetWindowShouldClose(window, GL_TRUE);
 			break;
-		case GLFW_KEY_Y:
-			conVar.pressY();
-			break;
-		case GLFW_KEY_X:
-			conVar.pressX();
-			break;
-		case GLFW_KEY_Z:
-			conVar.pressZ();
-			break;
 		case GLFW_KEY_R:
-			conVar.pressR();
+			contKey.pressR();
 			break;
 		case GLFW_KEY_LEFT :
-			conVar.pressLEFT();
+			contKey.pressLEFT();
 			break;
 		case GLFW_KEY_RIGHT :
-			conVar.pressRIGHT();
+			contKey.pressRIGHT();
 			break;
 		case GLFW_KEY_UP :
-			conVar.pressUP();
+			contKey.pressUP();
 			break;
 		case GLFW_KEY_DOWN :
-			conVar.pressDOWN();
+			contKey.pressDOWN();
 			break;
 		default:
 			break;
@@ -527,15 +506,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 }
 
 void sendMVP() {
-	// Our ModelViewProjection : multiplication of our 3 matrices
 	glm::mat4 MVP = Projection * View * Model; 
-	// Send our transformation to the currently bound shader, 
-	// in the "MVP" uniform, konstant fuer alle Eckpunkte
 	glUniformMatrix4fv(glGetUniformLocation(programID, "MVP"), 1, GL_FALSE, &MVP[0][0]);
-
-	glUniformMatrix4fv(glGetUniformLocation(programID, "M"), 1, GL_FALSE, &Model[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(programID, "V"), 1, GL_FALSE, &View[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(programID, "P"), 1, GL_FALSE, &Projection[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(programID, "M"), 1, GL_FALSE, &Model[0][0]);
+}
+
+void sendMVP(mat4& Model) {
+	mat4 MVP = Projection * View * Model; 
+	glUniformMatrix4fv(glGetUniformLocation(programID, "MVP"), 1, GL_FALSE, &MVP[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(programID, "V"), 1, GL_FALSE, &View[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(programID, "M"), 1, GL_FALSE, &Model[0][0]);
 }
 
 void drawSeg(float heigth) {
@@ -570,19 +551,15 @@ int main(void) {
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	
-	Control control;
+	SceneControl SceCont;
 
 	MoveControl moveFish(0.0, 4.0, 0.4, 0.6, 1.6);
 	MoveControl movePlant(1.0);
 	
 	Token fish("fish.obj", "fish.bmp");
-	
 	Token ground("ground.obj", "sand.bmp");
-	
 	Token plant("plant.obj", "blatt.bmp");
-	
 	Token aquar("aquarium.obj", "aquarium.bmp");
-
 	Token glass("glass.obj", "glass.dds", /*RGBA*/true);
 
 	programID = LoadShaders("StandardShading.vertexshader", "StandardShading.fragmentshader");
@@ -593,13 +570,13 @@ int main(void) {
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 		
-		control.setPerspective(Projection, 45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+		SceCont.setPerspective(Projection, 45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 		
-		control.setCamPos(View, conVar);
+		SceCont.setCamPos(View, contKey);
 		
-		control.setLightPos(0.0, 4.0, 1.0);
+		SceCont.setLightPos(0.0, 4.0, 1.0);
 		
-		control.setOrigin(Model, 1.0f);
+		SceCont.setOrigin(Model, 1.0f);
 		
 		sendMVP();
 		
