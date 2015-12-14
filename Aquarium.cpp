@@ -219,6 +219,7 @@ public:
 		path = path;
 		imagepath = imagepath;
 		Model = mat4(1.0f);
+		isFishWiggleLeft = true;
 		VertexArrayIDObj = 0;
 		res = loadOBJ(path, vertices, uvs, normals);		
 		TexturObj = loadBMP_custom(imagepath);
@@ -232,6 +233,7 @@ public:
 		path = path;
 		imagepath = imagepath;
 		Model = mat4(1.0f);
+		isFishWiggleLeft = true;
 		VertexArrayIDObj = 0;
 		res = loadOBJ(path, vertices, uvs, normals);		
 		TexturObj = loadDDS(imagepath);
@@ -273,7 +275,27 @@ public:
 		glUniformMatrix4fv(glGetUniformLocation(programID, "M"), 1, GL_FALSE, &Model[0][0]);
 	}
 	
+	void wiggle(float x, float y, float z) {
+		Model = mat4(1.0f);
+		wiggleRotate();
+		Model = translate(Model, vec3(x, y, z));
+	}
+
+	mat4 getModel() {
+		return Model;
+	}
+	
 private:
+
+	void wiggleRotate() {
+		if (isFishWiggleLeft) {
+			Model = rotate(Model, 2.0f, vec3(0.0, 1.0, 0.0));
+			isFishWiggleLeft = false; 
+		} else {
+			Model = rotate(Model, -2.0f, vec3(0.0, 1.0, 0.0));
+			isFishWiggleLeft = true; 
+		} 
+	}
 	
 	void create() {
 		GLuint vertexbuffer;
@@ -312,6 +334,7 @@ private:
 	GLuint VertexArrayIDObj; // Obj
 	GLuint TexturObj; // Textur
 	bool res; // TexturLoader loadDDS or loadBMP
+	bool isFishWiggleLeft;
 };
 
 /**
@@ -376,11 +399,19 @@ int main(void) {
 	
 	Control control;
 	
-	Token fish("fish.obj", "mandrill.bmp");
+	Token fish("fish.obj", "fish.bmp");
+	Token ground("ground.obj", "sand.bmp");
 
 	programID = LoadShaders("StandardShading.vertexshader", "StandardShading.fragmentshader");
 	glUseProgram(programID);
-
+	
+	float x = 0.0;
+	float y = 0.0;
+	float z = 0.0;
+	bool isWiggleLeft = false; // x
+	bool isWiggleDown = false; // y
+	bool isWiggleDepth = false; // z
+	
 	// Eventloop
 	while (!glfwWindowShouldClose(window))	{
 		// Clear the screen
@@ -390,15 +421,56 @@ int main(void) {
 		
 		control.setCamPos(View, conVar);
 		
-		control.setLightPos(4, 4, -4);
+		control.setLightPos(0, 4, 0);
 		
 		control.setOrigin(Model, 1.0f);
 		
-		control.rotateAqua(Model, conVar);
-		
 		sendMVP();
 
+		ground.draw();
+
+		fish.wiggle(x, y, z);
+		
+		fish.sendMVP(Projection, View);
+
 		fish.draw();
+
+		// Zum Testen
+		if (isWiggleLeft) {
+			x -= 0.001;
+		} else {
+			x += 0.001;
+		}
+
+		if (x > 4.0 && !isWiggleLeft) {
+			isWiggleLeft = true;
+		} else if (x < 0.0 && isWiggleLeft) {
+			isWiggleLeft = false;
+		}
+
+		if (isWiggleDown) {
+			y -= 0.0001;
+		} else {
+			y += 0.0001;
+		}
+
+		if (y > 0.4 && !isWiggleDown) {
+			isWiggleDown = true;
+		} else if (y < -0.4 && isWiggleDown) {
+			isWiggleDown = false;
+		}
+
+		if (isWiggleDepth) {
+			z -= 0.0002;
+		} else {
+			z += 0.0002;
+		}
+
+		if (z > 0.6 && !isWiggleDepth) {
+			isWiggleDepth = true;
+		} else if (z < -0.6 && isWiggleDepth) {
+			isWiggleDepth = false;
+		}
 		
 		// Swap buffers
 		glfwSwapBuffers(window);

@@ -1,4 +1,4 @@
-﻿Der Buildvorgang wurde am 12.12.2015 22:29:14 gestartet.
+﻿Der Buildvorgang wurde am 14.12.2015 11:10:00 gestartet.
      1>Projekt "C:\Users\Julian\Dropbox\cg_aquarium\CGTutorial.vcxproj" auf Knoten "2", Rebuild Ziel(e).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"external\glfw-3.0" /I"external\glm-0.9.4.0" /I"external\glew-1.9.0" /Zi /nologo /W3 /WX- /MP /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D TW_STATIC /D TW_NO_LIB_PRAGMA /D TW_NO_DIRECT3D /D GLEW_STATIC /D _CRT_SECURE_NO_WARNINGS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Aquarium.cpp objects.cpp objloader.cpp shader.cpp texture.cpp
@@ -9,7 +9,13 @@
      1>objects.cpp(183): warning C4018: '<=': Konflikt zwischen 'signed' und 'unsigned'
      1>objects.cpp(193): warning C4018: '<=': Konflikt zwischen 'signed' und 'unsigned'
          texture.cpp
-     1>Aquarium.cpp(256): warning C4305: 'Argument': Verkürzung von 'double' in 'GLclampf'
+     1>Aquarium.cpp(260): warning C4305: 'Argument': Verkürzung von 'double' in 'GLclampf'
+     1>Aquarium.cpp(440): warning C4305: '-=': Verkürzung von 'double' in 'float'
+     1>Aquarium.cpp(442): warning C4305: '+=': Verkürzung von 'double' in 'float'
+     1>Aquarium.cpp(452): warning C4305: '-=': Verkürzung von 'double' in 'float'
+     1>Aquarium.cpp(454): warning C4305: '+=': Verkürzung von 'double' in 'float'
+     1>Aquarium.cpp(464): warning C4305: '-=': Verkürzung von 'double' in 'float'
+     1>Aquarium.cpp(466): warning C4305: '+=': Verkürzung von 'double' in 'float'
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Debug\CGTutorial.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib glu32.lib opengl32.lib external\Debug\glfw3.lib external\Debug\GLEW_190.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Debug\CGTutorial.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Debug\CGTutorial.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug Debug\Aquarium.obj
          Debug\objects.obj
@@ -35,4 +41,4 @@
 
 Build erfolgreich.
 
-Verstrichene Zeit 00:00:04.08
+Verstrichene Zeit 00:00:01.28
