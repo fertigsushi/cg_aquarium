@@ -301,35 +301,35 @@ public:
 		xLimitMax = xLimMax;
 		yLimit = yLim;
 		zLimit = zLim;
-		zRotateLim = zRotLim;
+		yRotateLim = zRotLim;
 		x = 0.0;
 		y = 0.0;
 		z = 0.0;
-		zRotate = -1.6;
+		yRotate = 0.0;
 		xSpeed = 0.0005;
 		ySpeed = 0.0001;
 		zSpeed = 0.0002;
-		zRotateSpeed = 0.1;
+		yRotateSpeed = 0.2;
 		isWiggleLeft = false; // x
 		isWiggleDown = false; // y
 		isWiggleDepth = false; // z
 		isWiggleRotateLeft = false; // zRotate
 	}
 	// Fish 2
-	MoveControl(float xLimMin, float xLimMax, float yLim, float zLim, float zRotLim, float x, float y, float z) {
+	MoveControl(float xLimMin, float xLimMax, float yLim, float zLim, float yRotLim, float x, float y, float z) {
 		xLimitMin = xLimMin;
 		xLimitMax = xLimMax;
 		yLimit = yLim;
 		zLimit = zLim;
-		zRotateLim = zRotLim;
+		yRotateLim = yRotLim;
 		x = x;
 		y = y;
 		z = z;
-		zRotate = -1.6;
+		yRotate = -1.6;
 		xSpeed = 0.0005;
 		ySpeed = 0.0001;
 		zSpeed = 0.0002;
-		zRotateSpeed = 0.1;
+		yRotateSpeed = 0.1;
 		isWiggleLeft = false; // x
 		isWiggleDown = false; // y
 		isWiggleDepth = false; // z
@@ -368,8 +368,8 @@ public:
 		setIsWiggleDepth();
 	}
 
-	void moveRotateZ() {
-		setRotateZ();
+	void moveRotateY() {
+		setRotateY();
 		setIsWiggleRotateLeft();
 	}
 
@@ -385,8 +385,8 @@ public:
 		return z;
 	}
 
-	float getRotateZ() {
-		return zRotate;
+	float getRotateY() {
+		return yRotate;
 	}
 
 private:
@@ -439,18 +439,18 @@ private:
 		}
 	}
 
-	void setRotateZ() {
+	void setRotateY() {
 		if (isWiggleRotateLeft) {
-			zRotate -= zRotateSpeed;
+			yRotate -= yRotateSpeed;
 		} else {
-			zRotate += zRotateSpeed;
+			yRotate += yRotateSpeed;
 		}
 	}
 
 	void setIsWiggleRotateLeft() {
-		if (zRotate > zRotateLim && !isWiggleRotateLeft) {
+		if (yRotate > yRotateLim && !isWiggleRotateLeft) {
 			isWiggleRotateLeft = true;
-		} else if (zRotate < -zRotateLim && isWiggleRotateLeft) {
+		} else if (yRotate < -yRotateLim && isWiggleRotateLeft) {
 			isWiggleRotateLeft = false;
 		}
 	}
@@ -462,12 +462,12 @@ private:
 	float xLimitMax;
 	float yLimit;
 	float zLimit;
-	float zRotateLim;
+	float yRotateLim;
 	float xSpeed;
 	float ySpeed;
 	float zSpeed;
-	float zRotateSpeed;
-	float zRotate;
+	float yRotateSpeed;
+	float yRotate;
 	bool isWiggleLeft; // x
 	bool isWiggleDown; // y
 	bool isWiggleDepth; // z
@@ -553,12 +553,13 @@ int main(void) {
 	
 	SceneControl SceCont;
 
-	MoveControl moveFish(0.0, 4.0, 0.4, 0.6, 1.6);
+	MoveControl moveFish(0.0, 4.0, 0.4, 0.6, 1.0);
 	MoveControl movePlant(1.0);
 	
 	Token fish("fish.obj", "fish.bmp");
 	Token ground("ground.obj", "sand.bmp");
-	Token plant("plant.obj", "blatt.bmp");
+	Token plant1("plant.obj", "blatt.bmp");
+	Token plant2("plant2.obj", "redplant.bmp");
 	Token aquar("aquarium.obj", "aquarium.bmp");
 	Token glass("glass.obj", "glass.dds", /*RGBA*/true);
 
@@ -574,30 +575,32 @@ int main(void) {
 		
 		SceCont.setCamPos(View, contKey);
 		
-		SceCont.setLightPos(0.0, 4.0, 1.0);
+		SceCont.setLightPos(0.0, 4.5, 1.0);
 		
 		SceCont.setOrigin(Model, 1.0f);
 		
 		sendMVP();
-		
+
 		ground.draw();
-
 		aquar.draw();
-
 		//glass.draw(/*RGBA*/true);
 
-		fish.wiggle(moveFish.getX(), moveFish.getY(), moveFish.getZ(), moveFish.getRotateZ());
+		fish.wiggle(moveFish.getX(), moveFish.getY(), moveFish.getZ(), moveFish.getRotateY());
 		fish.sendMVP(Projection, View);
 		fish.draw();
 		
-		plant.wiggle(movePlant.getX(), movePlant.getY(), movePlant.getZ());
-		plant.sendMVP(Projection, View);
-		plant.draw();
+		plant1.wiggle(movePlant.getX(), movePlant.getY(), movePlant.getZ());
+		plant1.sendMVP(Projection, View);
+		plant1.draw();
+
+		plant2.wiggle(movePlant.getX(), movePlant.getY(), movePlant.getZ());
+		plant2.sendMVP(Projection, View);
+		plant2.draw();
 
 		moveFish.moveX();
 		moveFish.moveY();
 		moveFish.moveZ();
-		moveFish.moveRotateZ();
+		moveFish.moveRotateY();
 
 		movePlant.moveX();
 		movePlant.moveY();
