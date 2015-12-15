@@ -1,46 +1,28 @@
-﻿// Include standard headers
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
-#include <vector>
 #include <ctime>
 #include <cstdlib>
-
-#include <algorithm>
-// sin und cos
+#include <vector>
 #include <math.h>
-
-// Include GLEW
+#include <algorithm>
 #include <GL/glew.h>
-
-// Include GLFW
 #include <GLFW/glfw3.h>
-
-// Include GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
-// Achtung, die OpenGL-Tutorials nutzen glfw 2.7, glfw kommt mit einem veränderten API schon in der Version 3 
-
-// Befindet sich bei den OpenGL-Tutorials unter "common"
+#include <glm/gtc/quaternion.hpp> 
 #include "shader.hpp"
-
-// Wuerfel und Kugel
 #include "objects.hpp"
-
-// Ab Uebung5 werden objloader.hpp und cpp benoetigt
 #include "objloader.hpp"
-
-// Ab Uebung7 werden texture.hpp und cpp benoetigt
 #include "texture.hpp"
 
 using namespace glm;
 using namespace std;
 
-// Diese Drei Matrizen global (Singleton-Muster), damit sie jederzeit modifiziert und
-// an die Grafikkarte geschickt werden koennen
 glm::mat4 Projection;
 glm::mat4 View;
 glm::mat4 Model;
+glm::mat4 Save;
+glm::mat4 SaveKugel; 
 GLuint programID;
 
 /*
@@ -100,16 +82,13 @@ public:
 	void draw(bool isRGBA) {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_ALPHA_TEST);
 		
-		glAlphaFunc(GL_GREATER, 0.1);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, TexturObj);
 		glUniform1i(glGetUniformLocation(programID, "myTexturSampler"), 0);
 		glBindVertexArray(VertexArrayIDObj);
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-		
-		glDisable(GL_ALPHA_TEST);
+
 		glDisable(GL_BLEND);
 	}
 
@@ -127,6 +106,8 @@ public:
 		Model = rotate(Model, x, vec3(1.0, 0.0, 0.0));
 		sendMVP(Projection , View);
 	}
+
+
 
 private:
 
@@ -194,69 +175,50 @@ class KeyControl {
 public:
 	
 	KeyControl() {
-		camFraction = 0.1f;
-		camWinkel = 0.0;
-		camLX = 0.0f;
-		camLZ = -1.0;
-		camX = 0.0f; 
-		camZ = 5.0f;
+		speed = 0.1;
+		r = 15.0;
+		y = 0.0f;
+		rotate = 0.0;
+		camPos = vec3(sin(rotate), y, cos(rotate));
 	}
 	
 	void pressUP() {
-		camX += camLX * camFraction;
-		camZ += camLZ * camFraction;
+		if(r > 1.0) {
+		r -= speed;
+		}
 	}
 
 	void pressDOWN() {
-		camX -= camLX * camFraction;
-		camZ -= camLZ * camFraction;
+		r += speed;
 	}
 
 	void pressLEFT() {
-		camWinkel -= 0.01f;
-		camLX = sin(camWinkel);
-		camLZ = -cos(camWinkel);
+		rotate -= speed;
+		camPos = vec3(sin(rotate), y, cos(rotate));
 	}
 
 	void pressRIGHT() {
-		camWinkel += 0.01f;
-		camLX = sin(camWinkel);
-		camLZ = -cos(camWinkel);
+		rotate += 0.3;
+		camPos = vec3(sin(rotate), y, cos(rotate));
 	}
 
 	void pressR() {
-		camFraction = 0.1f;
-		camWinkel = 0.0;
-		camLX = 0.0f;
-		camLZ = -1.0;
-		camX = 0.0f; 
-		camZ = 5.0f;
+		r = 15.0;
+		y = 0.0f;
+		rotate = 0.0;
+		camPos = vec3(sin(rotate), y, cos(rotate));
 	}
 
-	float getCamX() {
-		return camX;
-	}
-
-	float getCamZ() {
-		return camZ;
-	}
-
-	float getCamLX() {
-		return camLX + camX;
-	}
-
-	float getCamLZ() {
-		return camLZ + camZ;
+	vec3 getCamPos() {
+		return camPos * r;
 	}
 
 private:
-
-	float camFraction;
-	float camWinkel;
-	float camLX;
-	float camLZ;
-	float camX; 
-	float camZ;
+	vec3 camPos;
+	float r;
+	float rotate;
+	float y;
+	float speed;
 };
 
 class SceneControl {
@@ -265,9 +227,9 @@ public:
 
 	SceneControl() {}
 
-	void setCamPos(mat4& View, KeyControl contKey) {
-		View = lookAt(vec3(contKey.getCamX(), 1.0f, contKey.getCamZ()), 
-			vec3(contKey.getCamLX(), 1.0f, contKey.getCamLZ()), 
+	void setCamPos(mat4& View, vec3& camPos) {
+		View = lookAt(camPos, 
+			vec3(0.0f, 0.0f, 0.0f), 
 			vec3(0.0f, 1.0f,  0.0f));
 	}
 
@@ -309,15 +271,16 @@ public:
 		y = 0.0;
 		z = 0.0;
 		yRotate = 0.0;
-		xSpeed = 0.0005;
-		ySpeed = 0.0001;
-		zSpeed = 0.0002;
+		xSpeed = 0.005;
+		ySpeed = 0.001;
+		zSpeed = 0.002;
 		yRotateSpeed = 0.2;
 		isWiggleLeft = false; // x
 		isWiggleDown = false; // y
 		isWiggleDepth = false; // z
 		isWiggleRotateLeft = false; // zRotate
 	}
+
 	// Fish 2
 	MoveControl(float xLimMin, float xLimMax, float yLim, float zLim, float yRotLim, float x, float y, float z) {
 		xLimitMin = xLimMin;
@@ -348,9 +311,9 @@ public:
 		x = 0.0;
 		y = 0.0;
 		z = 0.0;
-		xSpeed = 0.0005;
-		ySpeed = 0.0005;
-		zSpeed = 0.0001;
+		xSpeed = 0.008;
+		ySpeed = 0.008;
+		zSpeed = 0.004;
 		isWiggleLeft = false; // x
 		isWiggleDown = false; // y
 		isWiggleDepth = false; // z
@@ -465,6 +428,7 @@ private:
 	float x;
 	float y;
 	float z;
+	float yRotate;
 	float xLimitMin;
 	float xLimitMax;
 	float yLimit;
@@ -474,7 +438,6 @@ private:
 	float ySpeed;
 	float zSpeed;
 	float yRotateSpeed;
-	float yRotate;
 	bool isWiggleLeft; // x
 	bool isWiggleDown; // y
 	bool isWiggleDepth; // z
@@ -512,33 +475,29 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 }
 
-void drawSeg(float heigth) {
-	glm::mat4 Save = Model;
-	Model = glm::translate(Model, glm::vec3(0.0, heigth / 2.0, 0.0));
-	Model = glm::scale(Model, glm::vec3(0.15, heigth / 2.0, 0.15));
-	//sendMVP();
-	drawSphere(10, 10);
-	Model = Save;
-}
-
 int main(void) {
 	
 	if (!glfwInit()) {
 		fprintf(stderr, "Failed to initialize GLFW\n");
 		exit(EXIT_FAILURE);
 	}
+	
 	glfwSetErrorCallback(error_callback);
 	GLFWwindow* window = glfwCreateWindow(1024, 768,"CG - Tutorial", NULL, NULL);
+	
 	if (!window) {
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
-    glfwMakeContextCurrent(window);
+   
+	glfwMakeContextCurrent(window);
 	glewExperimental = true;
+	
 	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "Failed to initialize GLEW\n");
 		return -1;
 	}
+	
 	glfwSetKeyCallback(window, key_callback);
 	glClearColor(0.6f, 0.6f, 0.8f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
@@ -546,41 +505,58 @@ int main(void) {
 	
 	SceneControl SceCont;
 
-	MoveControl moveFish(0.0, 4.0, 0.4, 0.6, 1.0);
+	MoveControl moveFish1(0.0, 6.0, 0.7, 0.6, 0.6);
 	MoveControl movePlant(1.0);
-	MoveControl moveFish2(-2.5, 1.0, 0.3, 0.4, 1.0);
+	MoveControl moveFish2(-3.0, 5.5, 0.7, 0.6, 0.6);
+	MoveControl moveFish3(-5.5, 1.0, 0.7, 0.3, 0.6);
 	
 	Token fish("fish.obj", "fish.bmp"); // Schwimmt nach Rechts
 	Token fishBack("fishBack.obj", "fish.bmp"); // Schwimmt nach Links
 	Token fish2("fish2.obj", "fish2.bmp"); // Schwimmt nach Rechts
 	Token fish2Back("fish2Back.obj", "fish2.bmp"); // Schwimmt nach Links
+	Token fish3("fish3.obj", "fish3.bmp"); // Schwimmt nach Rechts
+	Token fish3Back("fish3Back.obj", "fish3.bmp"); // Schwimmt nach Links
 	Token ground("ground.obj", "sand.bmp");
 	Token plant1("plant.obj", "blatt.bmp");
 	Token plant2("plant2.obj", "blatt.bmp");
+	Token plant3("plant3.obj", "redplant.bmp");
+	Token boot("boot.obj", "boot1.bmp");
+	Token truhe("truhe.obj", "truhe.bmp");
 	Token aquar("aquarium.obj", "aquarium.bmp");
 	Token glass("glass.obj", "glass.dds", /*RGBA*/true);
+	Token coral("coral.obj", "mandrill.bmp");
 
 	programID = LoadShaders("StandardShading.vertexshader", "StandardShading.fragmentshader");
 	glUseProgram(programID);
-	
-	// Eventloop
-	while (!glfwWindowShouldClose(window))	{
-		// Clear the screen
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
+
+	while (!glfwWindowShouldClose(window)) {
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		SceCont.setPerspective(Projection, 45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 
 		SceCont.setOrigin(Model);
 		
-		SceCont.setCamPos(View, contKey);
+		SceCont.setCamPos(View, contKey.getCamPos());
 		
-		SceCont.setLightPos(0.0, 4.5, 1.0);
+		SceCont.setLightPos(0.0, 3.5, 0.0);
 		
 		SceCont.sendMVP(Model);
 
 		ground.draw();
 		aquar.draw();
-		//glass.draw(/*RGBA*/true);
+		boot.draw();
+		truhe.draw();
+		coral.draw();
+
+		fish3Back.wiggle(moveFish3.getX(), moveFish3.getY(), moveFish3.getZ(), moveFish3.getRotateY(), Projection, View);
+		fish3.wiggle(moveFish3.getX(), moveFish3.getY(), moveFish3.getZ(), moveFish3.getRotateY(), Projection, View);
+		
+		if (moveFish3.getIsWiggleLeft()) {
+			fish3Back.draw(); // Schwimmt nach Links
+		} else { 
+			fish3.draw(); // Schwimmt nach Rechts
+		}
 
 		fish2Back.wiggle(moveFish2.getX(), moveFish2.getY(), moveFish2.getZ(), moveFish2.getRotateY(), Projection, View);
 		fish2.wiggle(moveFish2.getX(), moveFish2.getY(), moveFish2.getZ(), moveFish2.getRotateY(), Projection, View);
@@ -591,11 +567,11 @@ int main(void) {
 			fish2.draw(); // Schwimmt nach Rechts
 		}
 		
-		fishBack.wiggle(moveFish.getX(), moveFish.getY(), moveFish.getZ(), moveFish.getRotateY(), Projection, View);
-		fish.wiggle(moveFish.getX(), moveFish.getY(), moveFish.getZ(), moveFish.getRotateY(), Projection, View);
+		fishBack.wiggle(moveFish1.getX(), moveFish1.getY(), moveFish1.getZ(), moveFish1.getRotateY(), Projection, View);
+		fish.wiggle(moveFish1.getX(), moveFish1.getY(), moveFish1.getZ(), moveFish1.getRotateY(), Projection, View);
 		
-		if (moveFish.getIsWiggleLeft()) {
-			fishBack.draw(); // Schwimmt nach Links
+		if (moveFish1.getIsWiggleLeft()) {
+		fishBack.draw(); // Schwimmt nach Links
 		} else { 
 			fish.draw(); // Schwimmt nach Rechts
 		}
@@ -605,37 +581,39 @@ int main(void) {
 
 		plant2.wiggle(movePlant.getX(), movePlant.getY(), movePlant.getZ(), Projection, View);
 		plant2.draw();
+		
+		plant3.wiggle(movePlant.getX(), movePlant.getY(), movePlant.getZ(), Projection, View);
+		plant3.draw();
 
-		moveFish.moveX();
-		moveFish.moveY();
-		moveFish.moveZ();
-		moveFish.rotateY();
+		moveFish1.moveX();
+		moveFish1.moveY();
+		moveFish1.moveZ();
+		moveFish1.rotateY();
 
 		moveFish2.moveX();
 		moveFish2.moveY();
 		moveFish2.moveZ();
 		moveFish2.rotateY();
 
+		moveFish3.moveX();
+		moveFish3.moveY();
+		moveFish3.moveZ();
+		moveFish3.rotateY();
+
 		movePlant.moveX();
 		movePlant.moveY();
 		movePlant.moveZ();
+
+		SceCont.setOrigin(Model);
 		
-		// Swap buffers
+		SceCont.sendMVP(Model);
+		
+		glass.draw(/*RGBA*/true);
+
 		glfwSwapBuffers(window);
-
-		// Poll for and process events 
-		glfwPollEvents();
+        glfwPollEvents();
 	} 
-
 	glDeleteProgram(programID);
-
-	// Cleanup VBO and shader
-	//glDeleteBuffers(1, &vertexbuffer);
-	//glDeleteBuffers(1, &normalbuffer);
-	//glDeleteBuffers(1, &uvbuffer);
-	//glDeleteTextures(1, &Texture);
-
-	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
 	return 0;
 }
