@@ -548,9 +548,12 @@ int main(void) {
 
 	MoveControl moveFish(0.0, 4.0, 0.4, 0.6, 1.0);
 	MoveControl movePlant(1.0);
+	MoveControl moveFish2(-2.5, 1.0, 0.3, 0.4, 1.0);
 	
 	Token fish("fish.obj", "fish.bmp"); // Schwimmt nach Rechts
 	Token fishBack("fishBack.obj", "fish.bmp"); // Schwimmt nach Links
+	Token fish2("fish2.obj", "fish2.bmp"); // Schwimmt nach Rechts
+	Token fish2Back("fish2Back.obj", "fish2.bmp"); // Schwimmt nach Links
 	Token ground("ground.obj", "sand.bmp");
 	Token plant1("plant.obj", "blatt.bmp");
 	Token plant2("plant2.obj", "blatt.bmp");
@@ -578,6 +581,15 @@ int main(void) {
 		ground.draw();
 		aquar.draw();
 		//glass.draw(/*RGBA*/true);
+
+		fish2Back.wiggle(moveFish2.getX(), moveFish2.getY(), moveFish2.getZ(), moveFish2.getRotateY(), Projection, View);
+		fish2.wiggle(moveFish2.getX(), moveFish2.getY(), moveFish2.getZ(), moveFish2.getRotateY(), Projection, View);
+		
+		if (moveFish2.getIsWiggleLeft()) {
+			fish2Back.draw(); // Schwimmt nach Links
+		} else { 
+			fish2.draw(); // Schwimmt nach Rechts
+		}
 		
 		fishBack.wiggle(moveFish.getX(), moveFish.getY(), moveFish.getZ(), moveFish.getRotateY(), Projection, View);
 		fish.wiggle(moveFish.getX(), moveFish.getY(), moveFish.getZ(), moveFish.getRotateY(), Projection, View);
@@ -598,6 +610,11 @@ int main(void) {
 		moveFish.moveY();
 		moveFish.moveZ();
 		moveFish.rotateY();
+
+		moveFish2.moveX();
+		moveFish2.moveY();
+		moveFish2.moveZ();
+		moveFish2.rotateY();
 
 		movePlant.moveX();
 		movePlant.moveY();

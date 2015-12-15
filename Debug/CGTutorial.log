@@ -1,4 +1,4 @@
-﻿Der Buildvorgang wurde am 15.12.2015 09:19:09 gestartet.
+﻿Der Buildvorgang wurde am 15.12.2015 10:11:52 gestartet.
      1>Projekt "C:\Users\Julian\Dropbox\cg_aquarium\CGTutorial.vcxproj" auf Knoten "2", Rebuild Ziel(e).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"external\glfw-3.0" /I"external\glm-0.9.4.0" /I"external\glew-1.9.0" /Zi /nologo /W3 /WX- /MP /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D TW_STATIC /D TW_NO_LIB_PRAGMA /D TW_NO_DIRECT3D /D GLEW_STATIC /D _CRT_SECURE_NO_WARNINGS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Aquarium.cpp objects.cpp objloader.cpp shader.cpp texture.cpp
@@ -23,6 +23,7 @@
      1>Aquarium.cpp(352): warning C4305: '=': Verkürzung von 'double' in 'float'
      1>Aquarium.cpp(353): warning C4305: '=': Verkürzung von 'double' in 'float'
      1>Aquarium.cpp(549): warning C4305: 'Argument': Verkürzung von 'double' in 'float'
+     1>Aquarium.cpp(551): warning C4305: 'Argument': Verkürzung von 'double' in 'float'
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Debug\CGTutorial.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib glu32.lib opengl32.lib external\Debug\glfw3.lib external\Debug\GLEW_190.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Debug\CGTutorial.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Debug\CGTutorial.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug Debug\Aquarium.obj
          Debug\objects.obj
@@ -48,4 +49,4 @@
 
 Build erfolgreich.
 
-Verstrichene Zeit 00:00:01.60
+Verstrichene Zeit 00:00:01.58
