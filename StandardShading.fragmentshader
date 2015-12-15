@@ -8,7 +8,8 @@ in vec3 EyeDirection_cameraspace;
 in vec3 LightDirection_cameraspace;
 
 // Ouput data
-out vec3 color;
+//out vec3 color;
+out vec4 final_color;
 
 // Values that stay constant for the whole mesh.
 uniform sampler2D myTextureSampler;
@@ -16,6 +17,7 @@ uniform mat4 MV;
 uniform vec3 LightPosition_worldspace;
 
 void main(){
+	vec3 color;
 
 	// Light emission properties
 	// You probably want to put them as uniforms
@@ -65,5 +67,6 @@ void main(){
 		MaterialDiffuseColor * LightColor * LightPower * cosTheta / (distance*distance) +
 		// Specular : reflective highlight, like a mirror
 		MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha,5) / (distance*distance);
-
+	final_color.rgb = color.rgb;
+	final_color.a = 0.4;
 }
