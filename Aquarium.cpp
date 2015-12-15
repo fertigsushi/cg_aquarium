@@ -113,36 +113,36 @@ public:
 		glDisable(GL_BLEND);
 	}
 
+	void wiggle(float x, float y, float z, float yRotate, mat4& Projection , mat4& View) {
+		setModelToOrigin();
+		wiggleRotate(yRotate);
+		Model = translate(Model, vec3(x, y, z));
+		sendMVP(Projection , View);
+	}
+
+	void wiggle(float x, float y, float z, mat4& Projection , mat4& View) {
+		setModelToOrigin();
+		Model = rotate(Model, y, vec3(0.0, 1.0, 0.0));
+		Model = rotate(Model, z, vec3(0.0, 0.0, 1.0));
+		Model = rotate(Model, x, vec3(1.0, 0.0, 0.0));
+		sendMVP(Projection , View);
+	}
+
+private:
+
+	void setModelToOrigin() {
+		Model = mat4(1.0f);
+	}
+
+	float getAngle(float RotationAngle) {
+		return RotationAngle * sin(RotationAngle / 2);
+	}
+
 	void sendMVP(mat4& Projection , mat4& View ) {
 		mat4 MVP = Projection * View * Model; 
 		glUniformMatrix4fv(glGetUniformLocation(programID, "MVP"), 1, GL_FALSE, &MVP[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(programID, "V"), 1, GL_FALSE, &View[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(programID, "M"), 1, GL_FALSE, &Model[0][0]);
-	}
-
-	void wiggle(float x, float y, float z, float zRotate) {
-		Model = mat4(1.0f);
-		wiggleRotate(zRotate);
-		Model = translate(Model, vec3(x, y, z));
-	}
-
-	void wiggle(float x, float y, float z) {
-		Model = mat4(1.0f);
-		Model = rotate(Model, y, vec3(0.0, 1.0, 0.0));
-		Model = rotate(Model, z, vec3(0.0, 0.0, 1.0));
-		Model = rotate(Model, x, vec3(1.0, 0.0, 0.0));
-	}
-
-	mat4 getModel() {
-		return Model;
-	}
-
-private:
-
-	float getRandom() {
-		srand ( time(NULL) ); //just seed the generator
-		int r = rand() % 16000 - 1000; //this produces numbers between -2000 - +2000
-		return r/10000.0;
 	}
 
 	void wiggleRotate(float zRotate) {
@@ -371,7 +371,7 @@ public:
 		setIsWiggleDepth();
 	}
 
-	void moveRotateY() {
+	void rotateY() {
 		setRotateY();
 		setIsWiggleRotateLeft();
 	}
@@ -390,6 +390,10 @@ public:
 
 	float getRotateY() {
 		return yRotate;
+	}
+
+	bool getIsWiggleLeft() {
+		return isWiggleLeft;
 	}
 
 private:
@@ -545,9 +549,10 @@ int main(void) {
 	MoveControl moveFish(0.0, 4.0, 0.4, 0.6, 1.0);
 	MoveControl movePlant(1.0);
 	
-	Token fish("fish.obj", "fish.bmp");
+	Token fish("fish.obj", "fish.bmp"); // Schwimmt nach Rechts
+	Token fishBack("fishBack.obj", "fish.bmp"); // Schwimmt nach Links
 	Token ground("ground.obj", "sand.bmp");
-	Token plant1("plant.obj", "redplant.bmp");
+	Token plant1("plant.obj", "blatt.bmp");
 	Token plant2("plant2.obj", "blatt.bmp");
 	Token aquar("aquarium.obj", "aquarium.bmp");
 	Token glass("glass.obj", "glass.dds", /*RGBA*/true);
@@ -561,35 +566,38 @@ int main(void) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 		
 		SceCont.setPerspective(Projection, 45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+
+		SceCont.setOrigin(Model);
 		
 		SceCont.setCamPos(View, contKey);
 		
 		SceCont.setLightPos(0.0, 4.5, 1.0);
-		
-		SceCont.setOrigin(Model);
 		
 		SceCont.sendMVP(Model);
 
 		ground.draw();
 		aquar.draw();
 		//glass.draw(/*RGBA*/true);
-
-		fish.wiggle(moveFish.getX(), moveFish.getY(), moveFish.getZ(), moveFish.getRotateY());
-		fish.sendMVP(Projection, View);
-		fish.draw();
 		
-		plant1.wiggle(movePlant.getX(), movePlant.getY(), movePlant.getZ());
-		plant1.sendMVP(Projection, View);
+		fishBack.wiggle(moveFish.getX(), moveFish.getY(), moveFish.getZ(), moveFish.getRotateY(), Projection, View);
+		fish.wiggle(moveFish.getX(), moveFish.getY(), moveFish.getZ(), moveFish.getRotateY(), Projection, View);
+		
+		if (moveFish.getIsWiggleLeft()) {
+			fishBack.draw(); // Schwimmt nach Links
+		} else { 
+			fish.draw(); // Schwimmt nach Rechts
+		}
+		
+		plant1.wiggle(movePlant.getX(), movePlant.getY(), movePlant.getZ(), Projection, View);
 		plant1.draw();
 
-		plant2.wiggle(movePlant.getX(), movePlant.getY(), movePlant.getZ());
-		plant2.sendMVP(Projection, View);
+		plant2.wiggle(movePlant.getX(), movePlant.getY(), movePlant.getZ(), Projection, View);
 		plant2.draw();
 
 		moveFish.moveX();
 		moveFish.moveY();
 		moveFish.moveZ();
-		moveFish.moveRotateY();
+		moveFish.rotateY();
 
 		movePlant.moveX();
 		movePlant.moveY();
