@@ -77,7 +77,6 @@ public:
 
 	/*
 	* Fuer Glass
-	* Noch etwas verbuggt!
 	*/
 	void draw(bool isRGBA) {
 		glEnable(GL_BLEND);
@@ -245,7 +244,6 @@ public:
 		vec3 lightPos = vec3(x, y, z);
 		vec3 lightColor = vec3(1.0, 0.1, 0.1);
 		glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y, lightPos.z);
-		glUniform3f(glGetUniformLocation(programID, "lightColor"), lightColor.r, lightColor.g, lightColor.b);
 	}
 
 	void sendMVP(mat4& Model) {
@@ -271,9 +269,9 @@ public:
 		y = 0.0;
 		z = 0.0;
 		yRotate = 0.0;
-		xSpeed = 0.005;
-		ySpeed = 0.001;
-		zSpeed = 0.002;
+		xSpeed = 0.0055;
+		ySpeed = 0.0015;
+		zSpeed = 0.0025;
 		yRotateSpeed = 0.2;
 		isWiggleLeft = false; // x
 		isWiggleDown = false; // y
@@ -499,7 +497,7 @@ int main(void) {
 	}
 	
 	glfwSetKeyCallback(window, key_callback);
-	glClearColor(0.6f, 0.6f, 0.8f, 0.0f);
+	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	
@@ -509,22 +507,30 @@ int main(void) {
 	MoveControl movePlant(1.0);
 	MoveControl moveFish2(-3.0, 5.5, 0.7, 0.6, 0.6);
 	MoveControl moveFish3(-5.5, 1.0, 0.7, 0.3, 0.6);
+	MoveControl moveFish4(0.0, 2.0, 0.4, 0.3, 0.6);
 	
-	Token fish("fish.obj", "fish.bmp"); // Schwimmt nach Rechts
-	Token fishBack("fishBack.obj", "fish.bmp"); // Schwimmt nach Links
-	Token fish2("fish2.obj", "fish2.bmp"); // Schwimmt nach Rechts
-	Token fish2Back("fish2Back.obj", "fish2.bmp"); // Schwimmt nach Links
-	Token fish3("fish3.obj", "fish3.bmp"); // Schwimmt nach Rechts
-	Token fish3Back("fish3Back.obj", "fish3.bmp"); // Schwimmt nach Links
-	Token ground("ground.obj", "sand.bmp");
-	Token plant1("plant.obj", "blatt.bmp");
-	Token plant2("plant2.obj", "blatt.bmp");
-	Token plant3("plant3.obj", "redplant.bmp");
-	Token boot("boot.obj", "boot1.bmp");
-	Token truhe("truhe.obj", "truhe.bmp");
-	Token aquar("aquarium.obj", "aquarium.bmp");
-	Token glass("glass.obj", "glass.dds", /*RGBA*/true);
-	Token coral("coral.obj", "mandrill.bmp");
+	Token fish("obj/fish.obj", "texture/fish.bmp"); // Schwimmt nach Rechts
+	Token fishBack("obj/fishBack.obj", "texture/fish.bmp"); // Schwimmt nach Links
+	
+	Token fish2("obj/fish2.obj", "texture/fish2.bmp"); // Schwimmt nach Rechts
+	Token fish2Back("obj/fish2Back.obj", "texture/fish2.bmp"); // Schwimmt nach Links
+	
+	Token fish3("obj/fish3.obj", "texture/fish3.bmp"); // Schwimmt nach Rechts
+	Token fish3Back("obj/fish3Back.obj", "texture/fish3.bmp"); // Schwimmt nach Links
+	
+	Token fish4("obj/fish4.obj", "texture/fish4.bmp"); // Schwimmt nach Rechts
+	Token fish4Back("obj/fish4Back.obj", "texture/fish4.bmp"); // Schwimmt nach Links
+	
+	Token ground("obj/ground.obj", "texture/sand.bmp");
+	Token plant1("obj/plant.obj", "texture/plant.bmp");
+	Token plant2("obj/plant2.obj", "texture/plant2.bmp");
+	Token plant3("obj/plant3.obj", "texture/plant3.bmp");
+	Token boot("obj/boot.obj", "texture/boot1.bmp");
+	Token truhe("obj/truhe.obj", "texture/truhe.bmp");
+	Token aquar("obj/aquarium.obj", "texture/aquarium.bmp");
+	Token glass("obj/glass.obj", "texture/glass.dds", /*use RGBA*/ true);
+	Token coral("obj/coral.obj", "texture/mandrill.bmp");
+	Token huegel("obj/huegel.obj", "texture/kiesel.bmp");
 
 	programID = LoadShaders("StandardShading.vertexshader", "StandardShading.fragmentshader");
 	glUseProgram(programID);
@@ -539,7 +545,7 @@ int main(void) {
 		
 		SceCont.setCamPos(View, contKey.getCamPos());
 		
-		SceCont.setLightPos(0.0, 3.5, 0.0);
+		SceCont.setLightPos(0.0, 12.0, 1.0);
 		
 		SceCont.sendMVP(Model);
 
@@ -548,6 +554,16 @@ int main(void) {
 		boot.draw();
 		truhe.draw();
 		coral.draw();
+		huegel.draw();
+
+		fish4Back.wiggle(moveFish4.getX(), moveFish4.getY(), moveFish4.getZ(), moveFish4.getRotateY(), Projection, View);
+		fish4.wiggle(moveFish4.getX(), moveFish4.getY(), moveFish4.getZ(), moveFish4.getRotateY(), Projection, View);
+		
+		if (moveFish4.getIsWiggleLeft()) {
+			fish4Back.draw(); // Schwimmt nach Links
+		} else { 
+			fish4.draw(); // Schwimmt nach Rechts
+		}
 
 		fish3Back.wiggle(moveFish3.getX(), moveFish3.getY(), moveFish3.getZ(), moveFish3.getRotateY(), Projection, View);
 		fish3.wiggle(moveFish3.getX(), moveFish3.getY(), moveFish3.getZ(), moveFish3.getRotateY(), Projection, View);
@@ -599,6 +615,11 @@ int main(void) {
 		moveFish3.moveY();
 		moveFish3.moveZ();
 		moveFish3.rotateY();
+
+		moveFish4.moveX();
+		moveFish4.moveY();
+		moveFish4.moveZ();
+		moveFish4.rotateY();
 
 		movePlant.moveX();
 		movePlant.moveY();
