@@ -221,8 +221,9 @@ class SceneControl {
 	
 public:
 
-	SceneControl() {
+	SceneControl(float aspect) {
 		programID = LoadShaders("StandardShading.vertexshader", "StandardShading.fragmentshader");
+		aspectRatio = aspect;
 	}
 
 	void setCamPos(vec3& camPos) {
@@ -270,6 +271,10 @@ public:
 		return programID;
 	}
 
+	float getAspectRatio() {
+		return aspectRatio;
+	}
+
 	void deleteProgramm() {
 		glDeleteProgram(programID);
 	}
@@ -280,6 +285,7 @@ private:
 	mat4 View;
 	mat4 Model;
 	GLuint programID;
+	float aspectRatio;
 };
 
 class MoveControl {

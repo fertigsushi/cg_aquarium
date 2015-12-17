@@ -16,6 +16,7 @@ Andere Interaktionsmoeglichkeiten ==> Zum Beenden "ESC"
 
 using namespace std;
 
+float aspectRatio; 
 KeyControl contKey; // Wichtig, vor key_callback(...) {}
 
 void error_callback(int error, const char* description) {
@@ -51,40 +52,60 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 *
 *@author Julian Osmer
 */
+void coutGetWindow() {
+	cout << endl << "\tAquarium (16:9 Optimiert)" << endl << endl;
+	cout << "Anleitung:" << endl << endl;
+	cout << "Mit den <Pfeiltasten> die Kamera bewegen." << endl;
+	cout << "Mit den <R> die Kamera reseten." << endl;
+	cout << "Mit <ESC> das Programm Beenden." << endl << endl;
+	cout << "\t1 = 1280x720 16:9" << endl;
+	cout << "\t2 = 1600x900 16:9" << endl;
+	cout << "\t3 = 1920x1080 16:9" << endl;
+	cout << "\t4 = 1280x800 16:10" << endl;
+	cout << "\t5 = 1680x1050 16:10" << endl;
+	cout << "\t6 = 1920x1200 16:10" << endl;
+	cout << "\t7 = 1024x768 4:3" << endl;
+	cout << endl << "\tf = Fullscreen" << endl;
+	cout << "\tw = Windows" << endl;
+}
+
+/**
+*
+*@author Julian Osmer
+*/
 GLFWwindow* getWindow() {
 	GLFWwindow* window;
 	int h, w;
 	char resolution, mode;
-	cout << endl << "\tAquarium (16:9 Optimiert)" << endl << endl;
-	cout << "Anleitung:" << endl << endl;
-	cout << "Mit den <Pfeiltasten> die Kamera bewegen." << endl;
-	cout << "Mit <ESC> das Programm Beenden." << endl << endl;
-	cout << "1 = 1280x720" << endl;
-	cout << "2 = 1366x768" << endl;
-	cout << "3 = 1920x1080" << endl;
-	cout << endl << "Auswahl = ";
+	coutGetWindow();
+	cout << endl << "Auflosung = ";
 	cin >> resolution;
-	cout << endl << "f = Fullscreen" << endl;
-	cout << "w = Windows" << endl;
-	cout << endl << "Auswahl = ";
+	cout << endl << "Fenster- / Vollbild = ";
 	cin >> mode;
-
 	switch (resolution) {
 		case '1':
-			h = 1280, 
-			w = 720;
+			h = 1280, w = 720; aspectRatio = 16.0f/9.0f;
 			break;
 		case '2':
-			h = 1366;
-			w = 768;
+			h = 1600; w = 900; aspectRatio = 16.0f/9.0f;
 			break;
 		case '3':
-			h = 1920;
-			w = 1080;
+			h = 1920; w = 1080; aspectRatio = 16.0f/9.0f;
+			break;
+		case '4':
+			h = 1280; w = 800; aspectRatio = 16.0f/10.0f;
+			break;
+		case '5':
+			h = 1680; w = 1050; aspectRatio = 16.0f/10.0f;;
+			break;
+		case '6':
+			h = 1920; w = 1200; aspectRatio = 16.0f/10.0f;;
+			break;
+		case '7':
+			h = 1024; w = 768; aspectRatio = 4.0f/3.0f;;
 			break;
 		default:
-			h = 1024, 
-			w = 768;
+			h = 1024; w = 768; aspectRatio = 4.0f/3.0f;;
 			break;
 	}
 
@@ -99,7 +120,6 @@ GLFWwindow* getWindow() {
 			window = glfwCreateWindow(h, w,"CG - Aquarium", NULL, NULL);
 			break;
 	}
-
 	return window;
 }
 
@@ -132,12 +152,13 @@ int main(void) {
 	glDepthFunc(GL_LESS);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
-	SceneControl SceCont; 
+	SceneControl SceCont(aspectRatio);
 
 	MoveControl moveFish1(0.0, 6.0, 0.7, 0.6, 0.6);
 	MoveControl moveFish2(-3.0, 5.5, 0.7, 0.6, 0.6);
 	MoveControl moveFish3(-5.5, 1.0, 0.7, 0.3, 0.6);
 	MoveControl moveFish4(0.0, 2.0, 0.4, 0.3, 0.6);
+	MoveControl moveFish5(-0.5, 5.0, 0.2, 0.4, 0.6);
 	MoveControl movePlant(1.0);
 	
 	Token fish("obj/fish.obj", "texture/fish.bmp", SceCont.getProgID()); // Schwimmt nach Rechts
@@ -151,6 +172,9 @@ int main(void) {
 	
 	Token fish4("obj/fish4.obj", "texture/fish4.bmp", SceCont.getProgID()); // Schwimmt nach Rechts
 	Token fish4Back("obj/fish4Back.obj", "texture/fish4.bmp", SceCont.getProgID()); // Schwimmt nach Links
+
+	Token fish5("obj/fish5.obj", "texture/fish5.bmp", SceCont.getProgID()); // Schwimmt nach Rechts
+	Token fish5Back("obj/fish5Back.obj", "texture/fish5.bmp", SceCont.getProgID()); // Schwimmt nach Links
 
 	Token plant1("obj/plant.obj", "texture/plant.bmp", SceCont.getProgID());
 	Token plant2("obj/plant2.obj", "texture/plant2.bmp", SceCont.getProgID());
@@ -177,7 +201,7 @@ int main(void) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Projection matrix : 45° Field of View, 16:9 ratio, display range : 0.1 unit <-> 100 units
-		SceCont.setPerspective(45.0f, 16.0f / 9.0f, 0.1f, 100.0f);
+		SceCont.setPerspective(45.0f, SceCont.getAspectRatio(), 0.1f, 100.0f);
 		SceCont.setOrigin();
 		SceCont.setCamPos(contKey.getCamPos());
 		SceCont.setLightPos(0.0, 6.0, 0.0);
@@ -198,6 +222,15 @@ int main(void) {
 		truhe.draw();
 		coral.draw();
 		huegel.draw();
+
+		fish5Back.wiggle(moveFish5.getX(), moveFish5.getY(), moveFish5.getZ(), moveFish5.getRotateY(), SceCont.getProj(), SceCont.getView());
+		fish5.wiggle(moveFish5.getX(), moveFish5.getY(), moveFish5.getZ(), moveFish5.getRotateY(), SceCont.getProj(), SceCont.getView());
+		
+		if (moveFish5.getIsWiggleLeft()) {
+			fish5Back.draw(); // Schwimmt nach Links
+		} else { 
+			fish5.draw(); // Schwimmt nach Rechts
+		}
 
 		fish4Back.wiggle(moveFish4.getX(), moveFish4.getY(), moveFish4.getZ(), moveFish4.getRotateY(), SceCont.getProj(), SceCont.getView());
 		fish4.wiggle(moveFish4.getX(), moveFish4.getY(), moveFish4.getZ(), moveFish4.getRotateY(), SceCont.getProj(), SceCont.getView());
@@ -263,6 +296,11 @@ int main(void) {
 		moveFish4.moveY();
 		moveFish4.moveZ();
 		moveFish4.rotateY();
+
+		moveFish5.moveX();
+		moveFish5.moveY();
+		moveFish5.moveZ();
+		moveFish5.rotateY();
 
 		movePlant.moveX();
 		movePlant.moveY();
