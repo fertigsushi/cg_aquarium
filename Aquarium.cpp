@@ -1,4 +1,20 @@
-﻿#include "julianclass.cpp"
+﻿/**
+CG - Aquarium
+=============
+Steuerung ==> Mit den "Pfeiltasten"
+Andere Interaktionsmoeglichkeiten ==> Zum Beenden "ESC"
+
+
+@author Julian Osmer, 542530; name, matr_nr; 
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <vector>
+#include <iostream>
+#include "julianheader.hpp"
+
+using namespace std;
 
 KeyControl contKey; // Wichtig, vor key_callback(...) {}
 
@@ -31,16 +47,72 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 }
 
+/**
+*
+*@author Julian Osmer
+*/
+GLFWwindow* getWindow() {
+	GLFWwindow* window;
+	int h, w;
+	char resolution, mode;
+	cout << endl << "\tAquarium (16:9 Optimiert)" << endl << endl;
+	cout << "Anleitung:" << endl << endl;
+	cout << "Mit den <Pfeiltasten> die Kamera bewegen." << endl;
+	cout << "Mit <ESC> das Programm Beenden." << endl << endl;
+	cout << "1 = 1280x720" << endl;
+	cout << "2 = 1366x768" << endl;
+	cout << "3 = 1920x1080" << endl;
+	cout << endl << "Auswahl = ";
+	cin >> resolution;
+	cout << endl << "f = Fullscreen" << endl;
+	cout << "w = Windows" << endl;
+	cout << endl << "Auswahl = ";
+	cin >> mode;
+
+	switch (resolution) {
+		case '1':
+			h = 1280, 
+			w = 720;
+			break;
+		case '2':
+			h = 1366;
+			w = 768;
+			break;
+		case '3':
+			h = 1920;
+			w = 1080;
+			break;
+		default:
+			h = 1024, 
+			w = 768;
+			break;
+	}
+
+	switch (mode) {
+		case 'f':
+			window = glfwCreateWindow(h, w,"CG - Aquarium", glfwGetPrimaryMonitor(), NULL);
+			break;
+		case 'w':
+			window = glfwCreateWindow(h, w,"CG - Aquarium", NULL, NULL);
+			break;
+		default:
+			window = glfwCreateWindow(h, w,"CG - Aquarium", NULL, NULL);
+			break;
+	}
+
+	return window;
+}
+
 int main(void) {
-	
 	if (!glfwInit()) {
 		fprintf(stderr, "Failed to initialize GLFW\n");
 		exit(EXIT_FAILURE);
 	}
 	
 	glfwSetErrorCallback(error_callback);
-	GLFWwindow* window = glfwCreateWindow(1024, 768,"CG - Aquarium", NULL, NULL);
 	
+	GLFWwindow* window = getWindow();
+
 	if (!window) {
 		glfwTerminate();
 		exit(EXIT_FAILURE);
@@ -104,10 +176,11 @@ int main(void) {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		SceCont.setPerspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+		// Projection matrix : 45° Field of View, 16:9 ratio, display range : 0.1 unit <-> 100 units
+		SceCont.setPerspective(45.0f, 16.0f / 9.0f, 0.1f, 100.0f);
 		SceCont.setOrigin();
 		SceCont.setCamPos(contKey.getCamPos());
-		SceCont.setLightPos(0.0, 5.0, 0.0);
+		SceCont.setLightPos(0.0, 6.0, 0.0);
 		SceCont.sendMVP();
 
 		tisch.draw(); // Vor Glas zeichnen

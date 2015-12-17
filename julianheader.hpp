@@ -1,14 +1,16 @@
-/* 
+/**
 * #################################################
-* # Author: Julian Osmer; s0542530@htw-berlin.de  #
+* # @author Julian Osmer; s0542530@htw-berlin.de  #
 * # Studiengang: Angewandte Informatik (B)        #
 * # Modul: B43.1 Computergrafik [WS 15/16]        #
 * # Beleg: Aquarium                               #
 * #################################################
 */
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <vector>
-#include <math.h>
+#include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
