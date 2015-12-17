@@ -320,6 +320,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="shader.hpp" />
     <ClInclude Include="texture.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\AquariumTest\StandardShading.fragmentshader" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

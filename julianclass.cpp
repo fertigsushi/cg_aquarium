@@ -76,16 +76,17 @@ public:
 	* Fuer Glass
 	*/
 	void draw(bool isRGBA) {
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);     // Turn Blending On
+        glDisable(GL_DEPTH_TEST);   // Turn Depth Testing Off
 		
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, TexturObj);
 		glUniform1i(glGetUniformLocation(programID, "myTexturSampler"), 0);
 		glBindVertexArray(VertexArrayIDObj);
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-
-		glDisable(GL_BLEND);
+		
+		glDisable(GL_BLEND);        // Turn Blending Off
+        glEnable(GL_DEPTH_TEST);    // Turn Depth Testing On
 	}
 
 	// Fuer Fish

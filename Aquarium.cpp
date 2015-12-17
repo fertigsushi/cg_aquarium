@@ -58,6 +58,7 @@ int main(void) {
 	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 	SceneControl SceCont; 
 
@@ -87,10 +88,15 @@ int main(void) {
 	Token boot("obj/boot.obj", "texture/boot1.bmp", SceCont.getProgID());
 	Token truhe("obj/truhe.obj", "texture/truhe.bmp", SceCont.getProgID());
 	Token aquar("obj/aquarium.obj", "texture/aquarium.bmp", SceCont.getProgID());
-	Token glass("obj/glass.obj", "texture/glass.dds", /*use RGBA*/ true, SceCont.getProgID());
 	Token coral("obj/coral.obj", "texture/mandrill.bmp", SceCont.getProgID());
 	Token huegel("obj/huegel.obj", "texture/kiesel.bmp", SceCont.getProgID());
 	Token tisch("obj/tisch.obj", "texture/tisch.bmp", SceCont.getProgID());
+
+	Token glassA1("obj/glassA1.obj", "texture/glassA.dds", /*use RGBA*/ true, SceCont.getProgID());
+	Token glassA2("obj/glassA2.obj", "texture/glassA.dds", /*use RGBA*/ true, SceCont.getProgID());
+
+	Token glassB1("obj/glassB1.obj", "texture/glassB.dds", /*use RGBA*/ true, SceCont.getProgID());
+	Token glassB2("obj/glassB2.obj", "texture/glassB.dds", /*use RGBA*/ true, SceCont.getProgID());
 	
 	SceCont.useShader();
 
@@ -104,13 +110,21 @@ int main(void) {
 		SceCont.setLightPos(0.0, 5.0, 0.0);
 		SceCont.sendMVP();
 
-		ground.draw();
+		tisch.draw(); // Vor Glas zeichnen
+		
+		// Reihenfolge bei Glas koennte wahrsch. auswrikungen haben
+		glassB2.draw(/*RGBA*/true);
+		glassB1.draw(/*RGBA*/true);
+		glassA2.draw(/*RGBA*/true);
+		glassA1.draw(/*RGBA*/true);
+		
+		// Ab hier alles nach Glas zeichnen
 		aquar.draw();
+		ground.draw(); 
 		boot.draw();
 		truhe.draw();
 		coral.draw();
 		huegel.draw();
-		tisch.draw();
 
 		fish4Back.wiggle(moveFish4.getX(), moveFish4.getY(), moveFish4.getZ(), moveFish4.getRotateY(), SceCont.getProj(), SceCont.getView());
 		fish4.wiggle(moveFish4.getX(), moveFish4.getY(), moveFish4.getZ(), moveFish4.getRotateY(), SceCont.getProj(), SceCont.getView());
@@ -184,8 +198,6 @@ int main(void) {
 		SceCont.setOrigin();
 		SceCont.sendMVP();
 		
-		glass.draw(/*RGBA*/true);
-
 		glfwSwapBuffers(window);
         glfwPollEvents();
 	} 
