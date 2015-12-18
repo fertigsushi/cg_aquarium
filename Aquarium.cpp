@@ -1,11 +1,11 @@
 ﻿/**
-CG - Aquarium
-=============
-Steuerung ==> Mit den "Pfeiltasten"
-Andere Interaktionsmoeglichkeiten ==> Zum Beenden "ESC"
-
-
-@author Julian Osmer, 542530; name, matr_nr; 
+* CG - Aquarium
+* =============
+* Steuerung ==> Mit den "Pfeiltasten"
+* Andere Interaktionsmoeglichkeiten ==> Zum Beenden "ESC"
+*...
+*
+* @author Julian Osmer, 542530; name, matr_nr; 
 */
 
 #include <stdio.h>
@@ -16,7 +16,7 @@ Andere Interaktionsmoeglichkeiten ==> Zum Beenden "ESC"
 
 using namespace std;
 
-float aspectRatio; 
+float aspectRatio; // Ubergabeparameter fuer Klasse SceneControl
 KeyControl contKey; // Wichtig, vor key_callback(...) {}
 
 void error_callback(int error, const char* description) {
@@ -43,14 +43,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		case GLFW_KEY_DOWN :
 			contKey.pressDOWN();
 			break;
+		case GLFW_KEY_1 :
+			contKey.press1();
+			break;
+		case GLFW_KEY_2 :
+			contKey.press2();
+			break;
 		default:
 			break;
 	}
 }
 
 /**
-*
-*@author Julian Osmer
+* Div. cout Befehle fuer getWindow()
+* @author Julian Osmer
 */
 void coutGetWindow() {
 	cout << endl << "\tAquarium (16:9 Optimiert)" << endl << endl;
@@ -66,12 +72,19 @@ void coutGetWindow() {
 	cout << "\t6 = 1920x1200 16:10" << endl;
 	cout << "\t7 = 1024x768 4:3" << endl;
 	cout << endl << "\tf = Fullscreen" << endl;
-	cout << "\tw = Windows" << endl;
+	cout << "\tw = Windowed" << endl;
 }
 
 /**
-*
-*@author Julian Osmer
+* Getter fur ein GLFWwindow* window was im
+* diesem Programm benutzt wird.
+* Anwender kann versch. Aufloesungen inkl.
+* dessen korrektem Bildformat waehlen.
+* Auf das korrekte Bildformat(aspectRatio) sollte beim
+* erweitern der Aufloesungen geachtet werden.
+* Und der Anwender kann zwischen Vollbild oder Fensterbild
+* waehlen.
+* @author Julian Osmer
 */
 GLFWwindow* getWindow() {
 	GLFWwindow* window;
@@ -80,8 +93,9 @@ GLFWwindow* getWindow() {
 	coutGetWindow();
 	cout << endl << "Auflosung = ";
 	cin >> resolution;
-	cout << endl << "Fenster- / Vollbild = ";
+	cout << endl << "Full // Windowed = ";
 	cin >> mode;
+
 	switch (resolution) {
 		case '1':
 			h = 1280, w = 720; aspectRatio = 16.0f/9.0f;
@@ -120,6 +134,7 @@ GLFWwindow* getWindow() {
 			window = glfwCreateWindow(h, w,"CG - Aquarium", NULL, NULL);
 			break;
 	}
+
 	return window;
 }
 
@@ -148,7 +163,7 @@ int main(void) {
 	
 	glfwSetKeyCallback(window, key_callback);
 	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
@@ -159,6 +174,7 @@ int main(void) {
 	MoveControl moveFish3(-5.5, 1.0, 0.7, 0.3, 0.6);
 	MoveControl moveFish4(0.0, 2.0, 0.4, 0.3, 0.6);
 	MoveControl moveFish5(-0.5, 5.0, 0.2, 0.4, 0.6);
+	MoveControl moveKugelFish(0.0, 3.0, 0.6, 0.4, 0.6);
 	MoveControl movePlant(1.0);
 	
 	Token fish("obj/fish.obj", "texture/fish.bmp", SceCont.getProgID()); // Schwimmt nach Rechts
@@ -175,6 +191,9 @@ int main(void) {
 
 	Token fish5("obj/fish5.obj", "texture/fish5.bmp", SceCont.getProgID()); // Schwimmt nach Rechts
 	Token fish5Back("obj/fish5Back.obj", "texture/fish5.bmp", SceCont.getProgID()); // Schwimmt nach Links
+
+	Token kugelFish("obj/kugelFish.obj", "texture/kugelFish.bmp", SceCont.getProgID()); // Schwimmt nach Rechts
+	Token kugelFishBack("obj/kugelFishBack.obj", "texture/kugelFish.bmp", SceCont.getProgID()); // Schwimmt nach Links
 
 	Token plant1("obj/plant.obj", "texture/plant.bmp", SceCont.getProgID());
 	Token plant2("obj/plant2.obj", "texture/plant2.bmp", SceCont.getProgID());
@@ -200,34 +219,40 @@ int main(void) {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		// Projection matrix : 45° Field of View, 16:9 ratio, display range : 0.1 unit <-> 100 units
-		SceCont.setPerspective(45.0f, SceCont.getAspectRatio(), 0.1f, 100.0f);
-		SceCont.setOrigin();
+		SceCont.setPerspective(45.0f, 0.1f, 100.0f);
 		SceCont.setCamPos(contKey.getCamPos());
-		SceCont.setLightPos(0.0, 6.0, 0.0);
-		SceCont.sendMVP();
+		SceCont.setLightPos(0.0, contKey.getLightY(), 0.0);
 
-		tisch.draw(); // Vor Glas zeichnen
+		tisch.draw(SceCont.getProj(), SceCont.getView()); // Vor Glas zeichnen
 		
 		// Reihenfolge bei Glas koennte wahrsch. auswrikungen haben
-		glassB2.draw(/*RGBA*/true);
-		glassB1.draw(/*RGBA*/true);
-		glassA2.draw(/*RGBA*/true);
-		glassA1.draw(/*RGBA*/true);
+		glassB2.draw(/*RGBA*/true, SceCont.getProj(), SceCont.getView());
+		glassB1.draw(/*RGBA*/true, SceCont.getProj(), SceCont.getView());
+		glassA2.draw(/*RGBA*/true, SceCont.getProj(), SceCont.getView());
+		glassA1.draw(/*RGBA*/true, SceCont.getProj(), SceCont.getView());
 		
 		// Ab hier alles nach Glas zeichnen
-		aquar.draw();
-		ground.draw(); 
-		boot.draw();
-		truhe.draw();
-		coral.draw();
-		huegel.draw();
+		aquar.draw(SceCont.getProj(), SceCont.getView());
+		ground.draw(SceCont.getProj(), SceCont.getView()); 
+		boot.draw(SceCont.getProj(), SceCont.getView());
+		truhe.draw(SceCont.getProj(), SceCont.getView());
+		coral.draw(SceCont.getProj(), SceCont.getView());
+		huegel.draw(SceCont.getProj(), SceCont.getView());
+		
+		kugelFishBack.wiggle(moveKugelFish.getX(), moveKugelFish.getY(), moveKugelFish.getZ(), moveKugelFish.getRotateY(), SceCont.getProj(), SceCont.getView());
+		kugelFish.wiggle(moveKugelFish.getX(), moveKugelFish.getY(), moveKugelFish.getZ(), moveKugelFish.getRotateY(), SceCont.getProj(), SceCont.getView());
+		
+		if (moveKugelFish.getIsWiggleLeft()) {
+			kugelFishBack.draw(); // Schwimmt nach Links 
+		} else { 
+			kugelFish.draw(); // Schwimmt nach Rechts
+		}
 
 		fish5Back.wiggle(moveFish5.getX(), moveFish5.getY(), moveFish5.getZ(), moveFish5.getRotateY(), SceCont.getProj(), SceCont.getView());
 		fish5.wiggle(moveFish5.getX(), moveFish5.getY(), moveFish5.getZ(), moveFish5.getRotateY(), SceCont.getProj(), SceCont.getView());
 		
 		if (moveFish5.getIsWiggleLeft()) {
-			fish5Back.draw(); // Schwimmt nach Links
+			fish5Back.draw(); // Schwimmt nach Links 
 		} else { 
 			fish5.draw(); // Schwimmt nach Rechts
 		}
@@ -302,12 +327,14 @@ int main(void) {
 		moveFish5.moveZ();
 		moveFish5.rotateY();
 
+		moveKugelFish.moveX();
+		moveKugelFish.moveY();
+		moveKugelFish.moveZ();
+		moveKugelFish.rotateY();
+
 		movePlant.moveX();
 		movePlant.moveY();
 		movePlant.moveZ();
-
-		SceCont.setOrigin();
-		SceCont.sendMVP();
 		
 		glfwSwapBuffers(window);
         glfwPollEvents();
