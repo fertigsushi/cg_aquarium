@@ -12,7 +12,13 @@
 #include <stdlib.h>
 #include <vector>
 #include <iostream>
-#include "julianheader.hpp"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include "KeyControl.hpp"
+#include "MoveControl.hpp"
+#include "SceneControl.hpp"
+#include "Token.hpp"
+//#include "julianheader.hpp"
 
 using namespace std;
 
@@ -191,7 +197,7 @@ int main(void) {
 
 	Token fish5("obj/fish5.obj", "texture/fish5.bmp", SceCont.getProgID()); // Schwimmt nach Rechts
 	Token fish5Back("obj/fish5Back.obj", "texture/fish5.bmp", SceCont.getProgID()); // Schwimmt nach Links
-
+	
 	Token kugelFish("obj/kugelFish.obj", "texture/kugelFish.bmp", SceCont.getProgID()); // Schwimmt nach Rechts
 	Token kugelFishBack("obj/kugelFishBack.obj", "texture/kugelFish.bmp", SceCont.getProgID()); // Schwimmt nach Links
 

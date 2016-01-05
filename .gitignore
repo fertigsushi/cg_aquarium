@@ -31,4 +31,6 @@
 *.app
 
 # Logfiles
+*.log
 *.tlog
+*.1.tlog
