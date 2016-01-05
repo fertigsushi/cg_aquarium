@@ -313,12 +313,14 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="objloader.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="texture.cpp" />
+    <ClCompile Include="Token.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="objects.hpp" />
     <ClInclude Include="objloader.hpp" />
     <ClInclude Include="shader.hpp" />
     <ClInclude Include="texture.hpp" />
+    <ClInclude Include="Token.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\AquariumTest\StandardShading.fragmentshader" />

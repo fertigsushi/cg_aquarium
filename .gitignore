@@ -4,6 +4,9 @@
 *.o
 *.obj
 
+# Files while Visual Studio is opened
+*.opensdf
+
 # Precompiled Headers
 *.gch
 *.pch
