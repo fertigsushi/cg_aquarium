@@ -3,14 +3,18 @@
 /*
 * Fuer nicht transparente Texturen
 */
-Token::Token(const char * path, const char * imagepath, GLuint progID) {
+Token::Token(const char* path, const char* imagepath, GLuint progID, bool isRGBA) {
 	path = path;
 	imagepath = imagepath;
 	programID = progID;
 	Model = mat4(1.0f);
 	VertexArrayIDObj = 0;
-	res = loadOBJ(path, vertices, uvs, normals);		
-	TexturObj = loadBMP_custom(imagepath);
+	res = loadOBJ(path, vertices, uvs, normals);
+	if (isRGBA == false) {
+		TexturObj = loadBMP_custom(imagepath);
+	} else {
+		TexturObj = loadDDS(imagepath);
+	}
 	create();
 }
 
@@ -23,7 +27,7 @@ Token::Token(const char * path, const char * imagepath, bool isRGBA, GLuint prog
 	programID = progID;
 	Model = mat4(1.0f);
 	VertexArrayIDObj = 0;
-	res = loadOBJ(path, vertices, uvs, normals);		
+	res = loadOBJ(path, vertices, uvs, normals);
 	TexturObj = loadDDS(imagepath);
 	create();
 }
@@ -36,7 +40,7 @@ Token::~Token(void) {
 */
 void Token::draw(mat4& Projection , mat4& View ) {
 	setModelToOrigin();
-	sendMVP(Projection , View);
+	sendMVP(Projection, View);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, TexturObj);
@@ -50,7 +54,7 @@ void Token::draw(mat4& Projection , mat4& View ) {
 */
 void Token::draw(bool isRGBA, mat4& Projection , mat4& View ) {
 	setModelToOrigin();
-	sendMVP(Projection , View );
+	sendMVP(Projection, View);
 
 	glEnable(GL_BLEND);     // Turn Blending On
 	glDisable(GL_DEPTH_TEST);   // Turn Depth Testing Off
@@ -91,7 +95,7 @@ void Token::wiggle(float x, float y, float z, float yRotate, mat4& Projection , 
 * Fuer Pflanzen
 * Siehe Klasse MoveControl
 */
-void Token::wiggle(float x, float y, float z, mat4& Projection , mat4& View) {
+void Token::wiggle(float x, float y, float z, mat4& Projection, mat4& View) {
 	setModelToOrigin();
 	Model = rotate(Model, y, vec3(0.0, 1.0, 0.0));
 	Model = rotate(Model, z, vec3(0.0, 0.0, 1.0));
@@ -110,7 +114,7 @@ void Token::setModelToOrigin() {
 	Model = mat4(1.0f);
 }
 
-void Token::sendMVP(mat4& Projection , mat4& View ) {
+void Token::sendMVP(mat4& Projection, mat4& View ) {
 	MVP = Projection * View * Model; 
 	glUniformMatrix4fv(glGetUniformLocation(programID, "MVP"), 1, GL_FALSE, &MVP[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(programID, "V"), 1, GL_FALSE, &View[0][0]);

@@ -1,3 +1,6 @@
+#ifndef TOKEN_H
+#define TOKEN_H
+
 #include <vector>
 #include <GL/glew.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -17,10 +20,10 @@ using namespace std;
 class Token {
 
 public:
-	Token(const char * path, const char * imagepath, GLuint progID);
+	Token(const char * path, const char * imagepath, GLuint progID, bool isRGBA = false);
 	Token(const char * path, const char * imagepath, bool isRGBA, GLuint progID);
 	~Token();
-	void draw(mat4& Projection , mat4& View );
+	void draw(mat4& Projection , mat4& View);
 	void draw(bool isRGBA, mat4& Projection , mat4& View );
 	void draw();
 	void wiggle(float x, float y, float z, float yRotate, mat4& Projection , mat4& View);
@@ -29,7 +32,7 @@ public:
 
 private:
 	void setModelToOrigin();
-	void sendMVP(mat4& Projection , mat4& View );
+	void sendMVP(mat4& Projection , mat4& View);
 	void wiggleRotate(float yRotate);
 	void create();
 	
@@ -46,3 +49,4 @@ private:
 	bool res; // TexturLoader loadDDS or loadBMP
 };
 
+#endif // TOKEN_H

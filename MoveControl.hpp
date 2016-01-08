@@ -1,3 +1,9 @@
+#include <vector>
+#include <GL/glew.h>
+#include <glm/gtc/matrix_transform.hpp>
+
+using namespace glm;
+
 /**
 * Klasse zum Bewegen bzw. Rotieren von Obj die
 * der Klassen Token ins Programm geladen worden.
@@ -23,6 +29,10 @@ public:
 	float getZ();
 	float getRotateY();
 	bool getIsWiggleLeft();
+
+	// new public
+	MoveControl(glm::vec3 min, glm::vec3 max, float speed);
+	void move();
 
 private:
 	void setX();
@@ -51,4 +61,10 @@ private:
 	bool isWiggleDown; // y
 	bool isWiggleDepth; // z
 	bool isWiggleRotateLeft; // zRotate
+
+	// new private
+	glm::vec3 min;
+	glm::vec3 max;
+	float speed;
+	glm::mat4 center_of_mass;
 };

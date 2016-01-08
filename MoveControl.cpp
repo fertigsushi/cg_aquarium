@@ -195,3 +195,15 @@ void MoveControl::setIsWiggleRotateLeft() {
 		isWiggleRotateLeft = false;
 	}
 }
+
+// new stuff
+
+MoveControl::MoveControl(glm::vec3 min, glm::vec3 max, float speed) {
+	this->min = min;
+	this->max = max;
+	this->speed = speed;
+}
+
+void MoveControl::move() {
+
+}
