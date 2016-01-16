@@ -35,6 +35,7 @@ private:
 	void sendMVP(mat4& Projection , mat4& View);
 	void wiggleRotate(float yRotate);
 	void create();
+	void loadTexture(bool isRGBA, const char* imagepath);
 	
 	mat4 MVP;
 	mat4 Model;
@@ -44,8 +45,6 @@ private:
 	GLuint programID;
 	GLuint VertexArrayIDObj; // Obj
 	GLuint TexturObj; // Textur
-	const char * path; // Obj path
-	const char * imagepath; // Textur path
 	bool res; // TexturLoader loadDDS or loadBMP
 };
 

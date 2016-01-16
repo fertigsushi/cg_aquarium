@@ -4,31 +4,11 @@
 * Fuer nicht transparente Texturen
 */
 Token::Token(const char* path, const char* imagepath, GLuint progID, bool isRGBA) {
-	path = path;
-	imagepath = imagepath;
 	programID = progID;
 	Model = mat4(1.0f);
 	VertexArrayIDObj = 0;
 	res = loadOBJ(path, vertices, uvs, normals);
-	if (isRGBA == false) {
-		TexturObj = loadBMP_custom(imagepath);
-	} else {
-		TexturObj = loadDDS(imagepath);
-	}
-	create();
-}
-
-/**
-* Fuer transparente Texturen
-*/
-Token::Token(const char * path, const char * imagepath, bool isRGBA, GLuint progID) {
-	path = path;
-	imagepath = imagepath;
-	programID = progID;
-	Model = mat4(1.0f);
-	VertexArrayIDObj = 0;
-	res = loadOBJ(path, vertices, uvs, normals);
-	TexturObj = loadDDS(imagepath);
+	loadTexture(isRGBA, imagepath);
 	create();
 }
 
@@ -152,4 +132,12 @@ void Token::create() {
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	glBindVertexArray(0);
+}
+
+void Token::loadTexture(bool isRGBA, const char* imagepath) {
+	if (isRGBA == false) {
+		TexturObj = loadBMP_custom(imagepath);
+	} else {
+		TexturObj = loadDDS(imagepath);
+	}
 }
