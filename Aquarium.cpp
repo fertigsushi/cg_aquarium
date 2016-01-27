@@ -8,20 +8,21 @@
 * @author Julian Osmer, 542530; name, matr_nr; 
 */
 
+#define MAX_FPS 30
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctime>
 #include <vector>
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "KeyControl.hpp"
 #include "MoveControl.hpp"
-#include "SceneControl.hpp"
-//#include "Token.hpp"
 #include "Fish.hpp"
 #include "Artifact.hpp"
 #include "Plant.hpp"
-//#include "julianheader.hpp"
+#include "Fishbowl.hpp"
 
 using namespace std;
 
@@ -152,19 +153,15 @@ int main(void) {
 		fprintf(stderr, "Failed to initialize GLFW\n");
 		exit(EXIT_FAILURE);
 	}
-
 	glfwSetErrorCallback(error_callback);
 
 	GLFWwindow* window = getWindow();
-
 	if (!window) {
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
-
 	glfwMakeContextCurrent(window);
 	glewExperimental = true;
-
 	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "Failed to initialize GLEW\n");
 		return -1;
@@ -172,179 +169,113 @@ int main(void) {
 
 	glfwSetKeyCallback(window, key_callback);
 	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
-	//glEnable(GL_DEPTH_TEST);
+
+	glEnable(GL_BLEND);
 	glDepthFunc(GL_LESS);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	SceneControl SceCont(aspectRatio);
-
-	//MoveControl moveFish1(0.0, 6.0, 0.7, 0.6, 0.6);
-	/*MoveControl moveFish2(-3.0, 5.5, 0.7, 0.6, 0.6);
-	MoveControl moveFish3(-5.5, 1.0, 0.7, 0.3, 0.6);
-	MoveControl moveFish4(0.0, 2.0, 0.4, 0.3, 0.6);
-	MoveControl moveFish5(-0.5, 5.0, 0.2, 0.4, 0.6);
-	MoveControl moveKugelFish(0.0, 3.0, 0.6, 0.4, 0.6);*/
 	MoveControl movePlant(1.0);
+	
+	vector<Plant> my_plants;
+	my_plants.push_back(Plant("obj/plant.obj", "texture/plant.bmp", &SceCont));
+	my_plants.push_back(Plant("obj/plant2.obj", "texture/plant2.bmp", &SceCont));
+	my_plants.push_back(Plant("obj/plant3.obj", "texture/plant3.bmp", &SceCont));
 
-	//Token fish("obj/fish.obj", "texture/fish.bmp", SceCont.getProgID()); // Schwimmt nach Rechts
-	//Token fishBack("obj/fishBack.obj", "texture/fish.bmp", SceCont.getProgID()); // Schwimmt nach Links
+	vector<Artifact> my_stuff;
+	my_stuff.push_back(Artifact("obj/ground.obj", "texture/sand.bmp", &SceCont));
+	my_stuff.push_back(Artifact("obj/boot.obj", "texture/boot1.bmp", &SceCont));
+	my_stuff.push_back(Artifact("obj/truhe.obj", "texture/truhe.bmp", &SceCont));
+	my_stuff.push_back(Artifact("obj/aquarium.obj", "texture/aquarium.bmp", &SceCont));
+	my_stuff.push_back(Artifact("obj/coral.obj", "texture/mandrill.bmp", &SceCont));
+	my_stuff.push_back(Artifact("obj/huegel.obj", "texture/kiesel.bmp", &SceCont));
+	my_stuff.push_back(Artifact("obj/tisch.obj", "texture/tisch.bmp", &SceCont));
 
-	Fish my_fish("obj/fish.obj", "texture/fish.bmp", SceCont.getProgID());
+	// Glaeser A: lange Seite (1 vorne, 2 hinten)
+	// Glaeser B: kurze Seite (1 rechts, 2 links)
+	vector<Artifact> my_glasses;
+	my_glasses.push_back(Artifact("obj/glassA1.obj", "texture/glassA.dds", &SceCont, /*use RGBA*/ true));
+	my_glasses.push_back(Artifact("obj/glassA2.obj", "texture/glassA.dds", &SceCont, /*use RGBA*/ true));
+	my_glasses.push_back(Artifact("obj/glassB1.obj", "texture/glassB.dds", &SceCont, /*use RGBA*/ true));
+	my_glasses.push_back(Artifact("obj/glassB2.obj", "texture/glassB.dds", &SceCont, /*use RGBA*/ true));
+	
+	Fishbowl* fishbowl = Fishbowl::create(glm::vec3(-5.1f, -1.5f, -3.0f), glm::vec3(5.1f, 1.8f, 3.5f));
 
-	/*Token fish2("obj/fish2.obj", "texture/fish2.bmp", SceCont.getProgID()); // Schwimmt nach Rechts
-	Token fish2Back("obj/fish2Back.obj", "texture/fish2.bmp", SceCont.getProgID()); // Schwimmt nach Links
-
-	Token fish3("obj/fish3.obj", "texture/fish3.bmp", SceCont.getProgID()); // Schwimmt nach Rechts
-	Token fish3Back("obj/fish3Back.obj", "texture/fish3.bmp", SceCont.getProgID()); // Schwimmt nach Links
-
-	Token fish4("obj/fish4.obj", "texture/fish4.bmp", SceCont.getProgID()); // Schwimmt nach Rechts
-	Token fish4Back("obj/fish4Back.obj", "texture/fish4.bmp", SceCont.getProgID()); // Schwimmt nach Links
-
-	Token fish5("obj/fish5.obj", "texture/fish5.bmp", SceCont.getProgID()); // Schwimmt nach Rechts
-	Token fish5Back("obj/fish5Back.obj", "texture/fish5.bmp", SceCont.getProgID()); // Schwimmt nach Links
-
-	Token kugelFish("obj/kugelFish.obj", "texture/kugelFish.bmp", SceCont.getProgID()); // Schwimmt nach Rechts
-	Token kugelFishBack("obj/kugelFishBack.obj", "texture/kugelFish.bmp", SceCont.getProgID()); // Schwimmt nach Links
-	*/
-
-	Plant plant1("obj/plant.obj", "texture/plant.bmp", SceCont.getProgID());
-	Plant plant2("obj/plant2.obj", "texture/plant2.bmp", SceCont.getProgID());
-	Plant plant3("obj/plant3.obj", "texture/plant3.bmp", SceCont.getProgID());
-
-	Artifact ground("obj/ground.obj", "texture/sand.bmp", SceCont.getProgID());
-	Artifact boot("obj/boot.obj", "texture/boot1.bmp", SceCont.getProgID());
-	Artifact truhe("obj/truhe.obj", "texture/truhe.bmp", SceCont.getProgID());
-	Artifact aquar("obj/aquarium.obj", "texture/aquarium.bmp", SceCont.getProgID());
-	Artifact coral("obj/coral.obj", "texture/mandrill.bmp", SceCont.getProgID());
-	Artifact huegel("obj/huegel.obj", "texture/kiesel.bmp", SceCont.getProgID());
-	Artifact tisch("obj/tisch.obj", "texture/tisch.bmp", SceCont.getProgID());
-
-	Artifact glassA1("obj/glassA1.obj", "texture/glassA.dds", SceCont.getProgID(), /*use RGBA*/ true);
-	Artifact glassA2("obj/glassA2.obj", "texture/glassA.dds", SceCont.getProgID(), /*use RGBA*/ true);
-
-	Artifact glassB1("obj/glassB1.obj", "texture/glassB.dds", SceCont.getProgID(), /*use RGBA*/ true);
-	Artifact glassB2("obj/glassB2.obj", "texture/glassB.dds", SceCont.getProgID(), /*use RGBA*/ true);
+	vector<Fish> my_fishes;
+	my_fishes.push_back(Fish(glm::vec3(-4.0f, -1.0f, -3.0f), 0.1f, fishbowl, "obj/fish_test2.obj", "texture/fish.bmp", &SceCont));
+	my_fishes.push_back(Fish(glm::vec3(-2.0f, -0.5f, -2.0f), 0.1f, fishbowl, "obj/fish_test2.obj", "texture/fish2.bmp", &SceCont));
+	my_fishes.push_back(Fish(glm::vec3(0.0f, 0.5f, -1.0f), 0.1f, fishbowl, "obj/fish_test2.obj", "texture/fish3.bmp", &SceCont));
+	my_fishes.push_back(Fish(glm::vec3(2.0f, 1.0f, 0.0f), 0.1f, fishbowl, "obj/fish_test2.obj", "texture/fish4.bmp", &SceCont));
+	my_fishes.push_back(Fish(glm::vec3(4.0f, 0.5f, 1.0f), 0.1f, fishbowl, "obj/fish_test2.obj", "texture/fish5.bmp", &SceCont));
+	my_fishes.push_back(Fish(glm::vec3(4.0f, -1.0f, -3.0f), 0.1f, fishbowl, "obj/fish_test2.obj", "texture/fish.bmp", &SceCont));
+	my_fishes.push_back(Fish(glm::vec3(2.0f, -0.5f, -2.0f), 0.1f, fishbowl, "obj/fish_test2.obj", "texture/fish2.bmp", &SceCont));
+	my_fishes.push_back(Fish(glm::vec3(0.0f, -0.5f, 1.0f), 0.1f, fishbowl, "obj/fish_test2.obj", "texture/fish3.bmp", &SceCont));
+	my_fishes.push_back(Fish(glm::vec3(-2.0f, 1.0f, 0.0f), 0.1f, fishbowl, "obj/fish_test2.obj", "texture/fish4.bmp", &SceCont));
+	my_fishes.push_back(Fish(glm::vec3(-4.0f, 0.5f, 1.0f), 0.1f, fishbowl, "obj/fish_test2.obj", "texture/fish5.bmp", &SceCont));
 
 	SceCont.useShader();
 
+	// for FPS controlling
+	double last_time = glfwGetTime();
+
+	srand(time(NULL));
+
+	// add fishes to fishbowl and save fishbowl in fish instances
+	for (std::vector<Fish>::iterator it = my_fishes.begin(); it < my_fishes.end(); it++) {
+		Fish& tmp = *it;
+		fishbowl->add_position(&tmp);
+	}
+
 	while (!glfwWindowShouldClose(window)) {
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// limiting FPS
+		bool go = false;
+		do {
+			double diff = abs(glfwGetTime() - last_time);
+			if (diff > (MAX_FPS / 1000.0)) {
+				go = true;
+			}
+		} while (!go);
+		last_time = glfwGetTime();
 
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		SceCont.setPerspective(45.0f, 0.1f, 100.0f);
 		SceCont.setCamPos(contKey.getCamPos());
 		SceCont.setLightPos(0.0, contKey.getLightY(), 0.0);
 
-		tisch.draw(SceCont.getProj(), SceCont.getView()); // Vor Glas zeichnen
+		// enable transpancy and disable depthtest
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
 
-		// Reihenfolge bei Glas koennte wahrsch. auswrikungen haben
-		glassB2.draw(/*RGBA*/true, SceCont.getProj(), SceCont.getView());
-		glassB1.draw(/*RGBA*/true, SceCont.getProj(), SceCont.getView());
-		glassA2.draw(/*RGBA*/true, SceCont.getProj(), SceCont.getView());
-		glassA1.draw(/*RGBA*/true, SceCont.getProj(), SceCont.getView());
-
-		// Ab hier alles nach Glas zeichnen
-		aquar.draw(SceCont.getProj(), SceCont.getView());
-		ground.draw(SceCont.getProj(), SceCont.getView()); 
-		boot.draw(SceCont.getProj(), SceCont.getView());
-		truhe.draw(SceCont.getProj(), SceCont.getView());
-		coral.draw(SceCont.getProj(), SceCont.getView());
-		huegel.draw(SceCont.getProj(), SceCont.getView());
-
-		/*kugelFishBack.wiggle(moveKugelFish.getX(), moveKugelFish.getY(), moveKugelFish.getZ(), moveKugelFish.getRotateY(), SceCont.getProj(), SceCont.getView());
-		kugelFish.wiggle(moveKugelFish.getX(), moveKugelFish.getY(), moveKugelFish.getZ(), moveKugelFish.getRotateY(), SceCont.getProj(), SceCont.getView());
-
-		if (moveKugelFish.getIsWiggleLeft()) {
-		kugelFishBack.draw(); // Schwimmt nach Links 
-		} else { 
-		kugelFish.draw(); // Schwimmt nach Rechts
+		// drawing glass
+		for (std::vector<Artifact>::iterator it = my_glasses.begin(); it < my_glasses.end(); it++) {
+			Artifact& tmp = *it;
+			tmp.draw();
 		}
 
-		fish5Back.wiggle(moveFish5.getX(), moveFish5.getY(), moveFish5.getZ(), moveFish5.getRotateY(), SceCont.getProj(), SceCont.getView());
-		fish5.wiggle(moveFish5.getX(), moveFish5.getY(), moveFish5.getZ(), moveFish5.getRotateY(), SceCont.getProj(), SceCont.getView());
+		// disable transparency and enable depth test
+		glDisable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
 
-		if (moveFish5.getIsWiggleLeft()) {
-		fish5Back.draw(); // Schwimmt nach Links 
-		} else { 
-		fish5.draw(); // Schwimmt nach Rechts
+		// drawing all the other stuff
+		for (vector<Artifact>::iterator it = my_stuff.begin(); it < my_stuff.end(); it++) {
+			Artifact& tmp = *it;
+			tmp.draw();
 		}
 
-		fish4Back.wiggle(moveFish4.getX(), moveFish4.getY(), moveFish4.getZ(), moveFish4.getRotateY(), SceCont.getProj(), SceCont.getView());
-		fish4.wiggle(moveFish4.getX(), moveFish4.getY(), moveFish4.getZ(), moveFish4.getRotateY(), SceCont.getProj(), SceCont.getView());
-
-		if (moveFish4.getIsWiggleLeft()) {
-		fish4Back.draw(); // Schwimmt nach Links
-		} else { 
-		fish4.draw(); // Schwimmt nach Rechts
+		// calculate new positions for fishes (move) and then draw them
+		for (std::vector<Fish>::iterator it = my_fishes.begin(); it < my_fishes.end(); it++) {
+			Fish& tmp = *it;
+			tmp.move();
+			tmp.draw();
 		}
 
-		fish3Back.wiggle(moveFish3.getX(), moveFish3.getY(), moveFish3.getZ(), moveFish3.getRotateY(), SceCont.getProj(), SceCont.getView());
-		fish3.wiggle(moveFish3.getX(), moveFish3.getY(), moveFish3.getZ(), moveFish3.getRotateY(), SceCont.getProj(), SceCont.getView());
-
-		if (moveFish3.getIsWiggleLeft()) {
-		fish3Back.draw(); // Schwimmt nach Links
-		} else { 
-		fish3.draw(); // Schwimmt nach Rechts
+		// wiggle and draw plants
+		for (vector<Plant>::iterator it = my_plants.begin(); it < my_plants.end(); it++) {
+			Plant& tmp = *it;
+			tmp.wiggle(movePlant.getX(), movePlant.getY(), movePlant.getZ());
+			tmp.draw();
 		}
-
-		fish2Back.wiggle(moveFish2.getX(), moveFish2.getY(), moveFish2.getZ(), moveFish2.getRotateY(), SceCont.getProj(), SceCont.getView());
-		fish2.wiggle(moveFish2.getX(), moveFish2.getY(), moveFish2.getZ(), moveFish2.getRotateY(), SceCont.getProj(), SceCont.getView());
-
-		if (moveFish2.getIsWiggleLeft()) {
-		fish2Back.draw(); // Schwimmt nach Links
-		} else { 
-		fish2.draw(); // Schwimmt nach Rechts
-		}*/
-
-		/*fishBack.wiggle(moveFish1.getX(), moveFish1.getY(), moveFish1.getZ(), moveFish1.getRotateY(), SceCont.getProj(), SceCont.getView());
-		fish.wiggle(moveFish1.getX(), moveFish1.getY(), moveFish1.getZ(), moveFish1.getRotateY(), SceCont.getProj(), SceCont.getView());
-
-		if (moveFish1.getIsWiggleLeft()) {
-			fishBack.draw(); // Schwimmt nach Links
-		} else { 
-			fish.draw(); // Schwimmt nach Rechts
-		}*/
-
-		my_fish.draw();
-
-		plant1.wiggle(movePlant.getX(), movePlant.getY(), movePlant.getZ(), SceCont.getProj(), SceCont.getView());
-		plant1.draw();
-
-		plant2.wiggle(movePlant.getX(), movePlant.getY(), movePlant.getZ(), SceCont.getProj(), SceCont.getView());
-		plant2.draw();
-
-		plant3.wiggle(movePlant.getX(), movePlant.getY(), movePlant.getZ(), SceCont.getProj(), SceCont.getView());
-		plant3.draw();
-
-		//moveFish1.moveX();
-		//moveFish1.moveY();
-		//moveFish1.moveZ();
-		//moveFish1.rotateY();
-
-		/*moveFish2.moveX();
-		moveFish2.moveY();
-		moveFish2.moveZ();
-		moveFish2.rotateY();
-
-		moveFish3.moveX();
-		moveFish3.moveY();
-		moveFish3.moveZ();
-		moveFish3.rotateY();
-
-		moveFish4.moveX();
-		moveFish4.moveY();
-		moveFish4.moveZ();
-		moveFish4.rotateY();
-
-		moveFish5.moveX();
-		moveFish5.moveY();
-		moveFish5.moveZ();
-		moveFish5.rotateY();
-
-		moveKugelFish.moveX();
-		moveKugelFish.moveY();
-		moveKugelFish.moveZ();
-		moveKugelFish.rotateY();*/
 
 		movePlant.moveX();
 		movePlant.moveY();
@@ -357,4 +288,3 @@ int main(void) {
 	glfwTerminate();
 	return 0;
 }
-

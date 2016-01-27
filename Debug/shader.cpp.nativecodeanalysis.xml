@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DEFECTS><DEFECT><SFA><FILEPATH>c:\a_privat\proggen\workspace\cg_aquarium\</FILEPATH><FILENAME>shader.cpp</FILENAME><LINE>32</LINE><COLUMN>9</COLUMN></SFA><DEFECTCODE>6031</DEFECTCODE><DESCRIPTION>Rückgabewert wird ignoriert: 'getchar'.</DESCRIPTION><FUNCTION>LoadShaders</FUNCTION><DECORATED>?LoadShaders@@YAIPBD0@Z</DECORATED><FUNCLINE>16</FUNCLINE><PATH/></DEFECT></DEFECTS>

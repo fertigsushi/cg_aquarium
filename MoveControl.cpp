@@ -1,36 +1,10 @@
 #include "MoveControl.hpp"
 
 /**
-* zB fuer Fische
-*/
-MoveControl::MoveControl(float xLimMin, float xLimMax, float yLim, float zLim, float zRotLim) {
-	xLimitMin = xLimMin;
-	xLimitMax = xLimMax;
-	yLimit = yLim;
-	zLimit = zLim;
-	yRotateLim = zRotLim;
-	x = 0.0;
-	y = 0.0;
-	z = 0.0;
-	yRotate = 0.0;
-	xSpeed = 0.006;
-	ySpeed = 0.005;
-	zSpeed = 0.005;
-	yRotateSpeed = 0.2;
-	isWiggleLeft = false; // x
-	isWiggleDown = false; // y
-	isWiggleDepth = false; // z
-	isWiggleRotateLeft = false; // zRotate
-}
-
-/**
 * zB fuer Pflanzen
 */
 MoveControl::MoveControl(float limit) {
-	xLimitMin = limit;
-	xLimitMax = limit;
-	yLimit = limit;
-	zLimit = limit;
+	this->limit = limit;
 	x = 0.0;
 	y = 0.0;
 	z = 0.0;
@@ -40,10 +14,6 @@ MoveControl::MoveControl(float limit) {
 	isWiggleLeft = false; // x
 	isWiggleDown = false; // y
 	isWiggleDepth = false; // z
-}
-
-MoveControl::~MoveControl(void)
-{
 }
 
 /**
@@ -82,18 +52,6 @@ void MoveControl::moveZ() {
 }
 
 /**
-* Siehe Kommentar fuer moveX()
-* Hinweis1: Anders als moveX() ist der
-* Min-Wert := -Max-Wert weil X die Hauptachse ist.
-* Hinweis2: Ist fuer das Rotieren auf der Y Achse gedacht nicht
-* fuer das bewegen. (translate)
-*/
-void MoveControl::rotateY() {
-	setRotateY();
-	setIsWiggleRotateLeft();
-}
-
-/**
 * Uebergabeparameter fuer wiggle Methoden
 * in der Klasse Token.
 */
@@ -115,23 +73,6 @@ float MoveControl::getZ() {
 	return z;
 }
 
-/**
-* Siehe Kommentar fuer getX()
-* und rotateY().
-*/
-float MoveControl::getRotateY() {
-	return yRotate;
-}
-
-/**
-* Fuer if abfrage in der while-Schleife 
-* in der Main, ob sich ein Obj auf der X Achse
-* nach Rechts oder Links bewegt.
-*/
-bool MoveControl::getIsWiggleLeft() {
-	return isWiggleLeft;
-}
-
 void MoveControl::setX() {
 	if (isWiggleLeft) {
 		x -= xSpeed;
@@ -141,9 +82,9 @@ void MoveControl::setX() {
 }
 
 void MoveControl::setIsWiggleLeft() {
-	if (x > xLimitMax && !isWiggleLeft) {
+	if (x > limit && !isWiggleLeft) {
 		isWiggleLeft = true;
-	} else if (x < xLimitMin && isWiggleLeft) {
+	} else if (x < limit && isWiggleLeft) {
 		isWiggleLeft = false;
 	}
 }
@@ -157,9 +98,9 @@ void MoveControl::setY() {
 }
 
 void MoveControl::setIsWiggleDown() {
-	if (y > yLimit && !isWiggleDown) {
+	if (y > limit && !isWiggleDown) {
 		isWiggleDown = true;
-	} else if (y < -yLimit && isWiggleDown) {
+	} else if (y < -limit && isWiggleDown) {
 		isWiggleDown = false;
 	}
 }
@@ -173,37 +114,9 @@ void MoveControl::setZ() {
 }
 
 void MoveControl::setIsWiggleDepth() {
-	if (z > zLimit && !isWiggleDepth) {
+	if (z > limit && !isWiggleDepth) {
 		isWiggleDepth = true;
-	} else if (z < -zLimit && isWiggleDepth) {
+	} else if (z < -limit && isWiggleDepth) {
 		isWiggleDepth = false;
 	}
-}
-
-void MoveControl::setRotateY() {
-	if (isWiggleRotateLeft) {
-		yRotate -= yRotateSpeed;
-	} else {
-		yRotate += yRotateSpeed;
-	}
-}
-
-void MoveControl::setIsWiggleRotateLeft() {
-	if (yRotate > yRotateLim && !isWiggleRotateLeft) {
-		isWiggleRotateLeft = true;
-	} else if (yRotate < -yRotateLim && isWiggleRotateLeft) {
-		isWiggleRotateLeft = false;
-	}
-}
-
-// new stuff
-
-MoveControl::MoveControl(glm::vec3 min, glm::vec3 max, float speed) {
-	this->min = min;
-	this->max = max;
-	this->speed = speed;
-}
-
-void MoveControl::move() {
-
 }

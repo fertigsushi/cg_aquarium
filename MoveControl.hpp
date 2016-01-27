@@ -17,22 +17,13 @@ using namespace glm;
 class MoveControl {
 
 public:
-	MoveControl(float xLimMin, float xLimMax, float yLim, float zLim, float zRotLim);
 	MoveControl(float limit);
-	~MoveControl();
 	void moveX();
 	void moveY();
 	void moveZ();
-	void rotateY();
 	float getX();
 	float getY();
 	float getZ();
-	float getRotateY();
-	bool getIsWiggleLeft();
-
-	// new public
-	MoveControl(glm::vec3 min, glm::vec3 max, float speed);
-	void move();
 
 private:
 	void setX();
@@ -41,30 +32,16 @@ private:
 	void setIsWiggleDown();
 	void setZ();
 	void setIsWiggleDepth();
-	void setRotateY();
-	void setIsWiggleRotateLeft();
 
+	float limit;
 	float x;
 	float y;
 	float z;
 	float yRotate;
-	float xLimitMin;
-	float xLimitMax;
-	float yLimit;
-	float zLimit;
-	float yRotateLim;
 	float xSpeed;
 	float ySpeed;
 	float zSpeed;
-	float yRotateSpeed;
 	bool isWiggleLeft; // x
 	bool isWiggleDown; // y
 	bool isWiggleDepth; // z
-	bool isWiggleRotateLeft; // zRotate
-
-	// new private
-	glm::vec3 min;
-	glm::vec3 max;
-	float speed;
-	glm::mat4 center_of_mass;
 };

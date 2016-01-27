@@ -311,6 +311,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="Aquarium.cpp" />
     <ClCompile Include="Artifact.cpp" />
     <ClCompile Include="Fish.cpp" />
+    <ClCompile Include="Fishbowl.cpp" />
     <ClCompile Include="KeyControl.cpp" />
     <ClCompile Include="MoveControl.cpp" />
     <ClCompile Include="objects.cpp" />
@@ -324,6 +325,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClInclude Include="Artifact.hpp" />
     <ClInclude Include="Fish.hpp" />
+    <ClInclude Include="Fishbowl.hpp" />
     <ClInclude Include="KeyControl.hpp" />
     <ClInclude Include="MoveControl.hpp" />
     <ClInclude Include="objects.hpp" />

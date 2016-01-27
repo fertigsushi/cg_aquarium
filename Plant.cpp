@@ -1,11 +1,8 @@
 #include "Plant.hpp"
 
-
-Plant::Plant(const char* path, const char* imagepath, GLuint progID)
-	: Token(path, imagepath, progID) {
-}
-
-
-Plant::~Plant(void)
-{
+/**
+* Creates an instance of this object and calls the super constructor.
+*/
+Plant::Plant(const char* path, const char* imagepath, SceneControl* scene)
+	: Token(path, imagepath, scene) {
 }

@@ -3,7 +3,5 @@
 
 class Plant : public Token {
 public:
-	Plant(const char* path, const char* imagepath, GLuint progID);
-	~Plant(void);
+	Plant(const char*, const char*, SceneControl*);
 };
-

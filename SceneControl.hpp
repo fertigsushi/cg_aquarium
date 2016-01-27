@@ -1,4 +1,5 @@
-
+#ifndef SCENECONTROL_H
+#define SCENECONTROL_H
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -14,7 +15,7 @@ using namespace glm;
 * GLuint programID.
 */
 class SceneControl {
-	
+
 public:
 	SceneControl(float aspect);
 	~SceneControl();
@@ -23,13 +24,15 @@ public:
 	void setLightPos(float x, float y, float z);
 	void useShader();
 	void deleteProgramm();
-	mat4 getProj();
-	mat4 getView();
+	glm::mat4 getProj();
+	glm::mat4 getView();
 	GLuint getProgID();
 
-private:
-	mat4 Projection;
-	mat4 View;
+protected:
+	glm::mat4 Projection;
+	glm::mat4 View;
 	GLuint programID;
 	float aspectRatio;
 };
+
+#endif // SCENECONTROL_H

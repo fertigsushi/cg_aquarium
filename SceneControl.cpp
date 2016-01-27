@@ -55,14 +55,14 @@ void SceneControl::deleteProgramm() {
 /**
 * Getter Projection Matrix
 */
-mat4 SceneControl::getProj() {
+glm::mat4 SceneControl::getProj() {
 	return Projection;
 }
 
 /**
 * Getter View Matrix
 */
-mat4 SceneControl::getView() {
+glm::mat4 SceneControl::getView() {
 	return View;
 }
 

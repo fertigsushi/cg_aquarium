@@ -6,6 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "objloader.hpp"
 #include "texture.hpp"
+#include "SceneControl.hpp"
 
 using namespace glm;
 using namespace std;
@@ -20,22 +21,17 @@ using namespace std;
 class Token {
 
 public:
-	Token(const char * path, const char * imagepath, GLuint progID, bool isRGBA = false);
-	Token(const char * path, const char * imagepath, bool isRGBA, GLuint progID);
-	~Token();
-	void draw(mat4& Projection , mat4& View);
-	void draw(bool isRGBA, mat4& Projection , mat4& View );
+	Token(const char*, const char*, SceneControl*, bool isRGBA = false);
 	void draw();
-	void wiggle(float x, float y, float z, float yRotate, mat4& Projection , mat4& View);
-	void wiggle(float x, float y, float z, mat4& Projection , mat4& View);
-	mat4 getModel();
+	void wiggle(float x, float y, float z);
+	glm::vec3 get_center_of_mass();
+	void sendMVP();
 
-private:
+protected:
 	void setModelToOrigin();
-	void sendMVP(mat4& Projection , mat4& View);
-	void wiggleRotate(float yRotate);
 	void create();
 	
+	SceneControl* scene;
 	mat4 MVP;
 	mat4 Model;
 	vector<vec3> vertices; // Buffer
@@ -44,9 +40,9 @@ private:
 	GLuint programID;
 	GLuint VertexArrayIDObj; // Obj
 	GLuint TexturObj; // Textur
-	const char * path; // Obj path
-	const char * imagepath; // Textur path
+	const char* imagepath; // Textur path
 	bool res; // TexturLoader loadDDS or loadBMP
+	glm::vec3 center_of_mass;
 };
 
 #endif // TOKEN_H

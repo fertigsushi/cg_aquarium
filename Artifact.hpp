@@ -3,7 +3,5 @@
 
 class Artifact : public Token {
 public:
-	Artifact(const char* path, const char* imagepath, GLuint progID, bool isRGBA = false);
-	~Artifact(void);
+	Artifact(const char* path, const char* imagepath, SceneControl*, bool isRGBA = false);
 };
-
