@@ -19,7 +19,6 @@ using namespace std;
 * sendMVP() Methode fuer jedes Obj.
 */
 class Token {
-
 public:
 	Token(const char*, const char*, SceneControl*, bool isRGBA = false);
 	void draw();
