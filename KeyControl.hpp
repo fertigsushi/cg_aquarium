@@ -1,3 +1,5 @@
+#ifndef KEYCONTROL_H
+#define KEYCONTROL_H
 
 #include <math.h>
 #include <glm/glm.hpp>
@@ -34,3 +36,5 @@ private:
 	float speed;
 	float lightY;
 };
+
+#endif // KEYCONTROL_H

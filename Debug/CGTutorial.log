@@ -1,9 +1,28 @@
-﻿Der Buildvorgang wurde am 27.01.2016 17:51:27 gestartet.
+﻿Der Buildvorgang wurde am 01.02.2016 10:26:09 gestartet.
      1>Projekt "C:\a_privat\proggen\workspace\cg_aquarium\CGTutorial.vcxproj" auf Knoten "2", Build Ziel(e).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"external\glfw-3.0" /I"external\glm-0.9.4.0" /I"external\glew-1.9.0" /Zi /nologo /W3 /WX- /MP /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D TW_STATIC /D TW_NO_LIB_PRAGMA /D TW_NO_DIRECT3D /D GLEW_STATIC /D _CRT_SECURE_NO_WARNINGS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Aquarium.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"external\glfw-3.0" /I"external\glm-0.9.4.0" /I"external\glew-1.9.0" /Zi /nologo /W3 /WX- /MP /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D TW_STATIC /D TW_NO_LIB_PRAGMA /D TW_NO_DIRECT3D /D GLEW_STATIC /D _CRT_SECURE_NO_WARNINGS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Aquarium.cpp Artifact.cpp Fish.cpp Fishbowl.cpp KeyControl.cpp MoveControl.cpp objects.cpp objloader.cpp Plant.cpp SceneControl.cpp shader.cpp texture.cpp Token.cpp
          Aquarium.cpp
-     1>Aquarium.cpp(222): warning C4244: 'Argument': Konvertierung von 'time_t' in 'unsigned int', möglicher Datenverlust
+         Artifact.cpp
+         Fish.cpp
+         Fishbowl.cpp
+         KeyControl.cpp
+         MoveControl.cpp
+     1>Aquarium.cpp(221): warning C4244: 'Argument': Konvertierung von 'time_t' in 'unsigned int', möglicher Datenverlust
+     1>KeyControl.cpp(5): warning C4305: '=': Verkürzung von 'double' in 'float'
+     1>KeyControl.cpp(59): warning C4305: '+=': Verkürzung von 'double' in 'float'
+         objects.cpp
+         objloader.cpp
+         Plant.cpp
+     1>MoveControl.cpp(11): warning C4305: '=': Verkürzung von 'double' in 'float'
+     1>MoveControl.cpp(12): warning C4305: '=': Verkürzung von 'double' in 'float'
+     1>MoveControl.cpp(13): warning C4305: '=': Verkürzung von 'double' in 'float'
+         SceneControl.cpp
+     1>objects.cpp(183): warning C4018: '<=': Konflikt zwischen 'signed' und 'unsigned'
+     1>objects.cpp(193): warning C4018: '<=': Konflikt zwischen 'signed' und 'unsigned'
+         shader.cpp
+         texture.cpp
+         Token.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Debug\CGTutorial.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib glu32.lib opengl32.lib external\Debug\glfw3.lib external\Debug\GLEW_190.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Debug\CGTutorial.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Debug\CGTutorial.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug Debug\Aquarium.obj
          Debug\Artifact.obj
@@ -18,9 +37,24 @@
          Debug\shader.obj
          Debug\texture.obj
          Debug\Token.obj
+     1>glfw3.lib(context.obj) : warning LNK4099: PDB "vc100.pdb" wurde nicht mit "glfw3.lib(context.obj)" oder an "C:\a_privat\proggen\workspace\cg_aquarium\Debug\vc100.pdb" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(gamma.obj) : warning LNK4099: PDB "vc100.pdb" wurde nicht mit "glfw3.lib(gamma.obj)" oder an "C:\a_privat\proggen\workspace\cg_aquarium\Debug\vc100.pdb" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(init.obj) : warning LNK4099: PDB "vc100.pdb" wurde nicht mit "glfw3.lib(init.obj)" oder an "C:\a_privat\proggen\workspace\cg_aquarium\Debug\vc100.pdb" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(input.obj) : warning LNK4099: PDB "vc100.pdb" wurde nicht mit "glfw3.lib(input.obj)" oder an "C:\a_privat\proggen\workspace\cg_aquarium\Debug\vc100.pdb" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(monitor.obj) : warning LNK4099: PDB "vc100.pdb" wurde nicht mit "glfw3.lib(monitor.obj)" oder an "C:\a_privat\proggen\workspace\cg_aquarium\Debug\vc100.pdb" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(time.obj) : warning LNK4099: PDB "vc100.pdb" wurde nicht mit "glfw3.lib(time.obj)" oder an "C:\a_privat\proggen\workspace\cg_aquarium\Debug\vc100.pdb" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(window.obj) : warning LNK4099: PDB "vc100.pdb" wurde nicht mit "glfw3.lib(window.obj)" oder an "C:\a_privat\proggen\workspace\cg_aquarium\Debug\vc100.pdb" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_gamma.obj) : warning LNK4099: PDB "vc100.pdb" wurde nicht mit "glfw3.lib(win32_gamma.obj)" oder an "C:\a_privat\proggen\workspace\cg_aquarium\Debug\vc100.pdb" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_init.obj) : warning LNK4099: PDB "vc100.pdb" wurde nicht mit "glfw3.lib(win32_init.obj)" oder an "C:\a_privat\proggen\workspace\cg_aquarium\Debug\vc100.pdb" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_joystick.obj) : warning LNK4099: PDB "vc100.pdb" wurde nicht mit "glfw3.lib(win32_joystick.obj)" oder an "C:\a_privat\proggen\workspace\cg_aquarium\Debug\vc100.pdb" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_monitor.obj) : warning LNK4099: PDB "vc100.pdb" wurde nicht mit "glfw3.lib(win32_monitor.obj)" oder an "C:\a_privat\proggen\workspace\cg_aquarium\Debug\vc100.pdb" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_time.obj) : warning LNK4099: PDB "vc100.pdb" wurde nicht mit "glfw3.lib(win32_time.obj)" oder an "C:\a_privat\proggen\workspace\cg_aquarium\Debug\vc100.pdb" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(win32_window.obj) : warning LNK4099: PDB "vc100.pdb" wurde nicht mit "glfw3.lib(win32_window.obj)" oder an "C:\a_privat\proggen\workspace\cg_aquarium\Debug\vc100.pdb" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>glfw3.lib(wgl_context.obj) : warning LNK4099: PDB "vc100.pdb" wurde nicht mit "glfw3.lib(wgl_context.obj)" oder an "C:\a_privat\proggen\workspace\cg_aquarium\Debug\vc100.pdb" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
+     1>GLEW_190.lib(glew.obj) : warning LNK4099: PDB "vc100.pdb" wurde nicht mit "GLEW_190.lib(glew.obj)" oder an "C:\a_privat\proggen\workspace\cg_aquarium\Debug\vc100.pdb" gefunden; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären.
          CGTutorial.vcxproj -> C:\a_privat\proggen\workspace\cg_aquarium\Debug\CGTutorial.exe
      1>Die Erstellung des Projekts "C:\a_privat\proggen\workspace\cg_aquarium\CGTutorial.vcxproj" ist abgeschlossen, Build Ziel(e).
 
 Build erfolgreich.
 
-Verstrichene Zeit 00:00:01.94
+Verstrichene Zeit 00:00:13.76

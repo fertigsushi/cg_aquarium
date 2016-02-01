@@ -129,6 +129,8 @@
       <SubSystem>Console</SubSystem>
       <Version>
       </Version>
+      <ForceFileOutput>
+      </ForceFileOutput>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>

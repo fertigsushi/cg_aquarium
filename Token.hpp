@@ -24,11 +24,11 @@ public:
 	void draw();
 	void wiggle(float x, float y, float z);
 	glm::vec3 get_center_of_mass();
-	void sendMVP();
 
 protected:
 	void setModelToOrigin();
 	void create();
+	void sendMVP();
 	
 	SceneControl* scene;
 	mat4 MVP;

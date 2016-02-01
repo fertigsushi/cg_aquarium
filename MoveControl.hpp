@@ -1,3 +1,6 @@
+#ifndef MOVECONTROL_H
+#define MOVECONTROL_H
+
 #include <vector>
 #include <GL/glew.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -45,3 +48,5 @@ private:
 	bool isWiggleDown; // y
 	bool isWiggleDepth; // z
 };
+
+#endif // MOVECONTROL_H
